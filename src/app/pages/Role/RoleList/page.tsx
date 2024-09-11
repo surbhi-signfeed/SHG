@@ -100,15 +100,15 @@ const RoleList = () => {
     <>
       <TopNavbar />
 
-      <div className="flex">
+      <div className="flex bg-gray-100">
         {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">
           <Sidebar />
         </div>
 
         {/* Main Content */}
-        <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-blue-200">
-          <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw]">
+        <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
+          <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw] lg:mt-4">
             Role List
           </h2>
 
