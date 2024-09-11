@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+/* font  */
+@font-face {
+  font-family: "CustomFontB";
+  src: url("../../public/fonts/bi/BricolageGrotesque_72pt-Regular.ttf")
+    format("truetype");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "CustomFontP";
+  src: url("../../public/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
