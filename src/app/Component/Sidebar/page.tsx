@@ -22,10 +22,10 @@ const Sidebar = () => {
     <>
       {/* Sidebar  laptop*/}
       <div
-        className={` hidden md:flex fixed  left-0 h-full  text-white shadow-md z-10 lg:w-64 ${
+        className={` hidden md:flex fixed  left-0 h-[100vh] bg-[#2B2F3B]  text-white shadow-md z-10 lg:w-64 ${
           isOpen ? "w-64" : "w-0"
         } transition-all duration-300 overflow-hidden lg:block  `}
-        style={{ background: "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(136,135,132,1) 100%)"}}
+        
       >
          <div className="px-4 py-2 mt-[110px]">
       {/* This wrapper will control the scrolling */}
@@ -81,24 +81,18 @@ const Sidebar = () => {
           </button>
           {isDepartmentsOpen && (
             <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+              <Link
+                href="/pages/Departments/ListDepartments"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Department List</span>
+              </Link>
+              <Link
+                href="/pages/Departments/CreateDepartments"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
                 <TbWaveSawTool /> <span>Create Department</span>
-              </a>
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-              >
-                <TbWaveSawTool /> <span>Modify Department</span>
-              </a>
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-              >
-                <TbWaveSawTool /> <span>View Department</span>
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -117,12 +111,18 @@ const Sidebar = () => {
           </button>
           {isUserOpen && (
             <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+              <Link
+                href="/pages/User/ListUser"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>User List</span>
+              </Link>
+              <Link
+                href="/pages/User/CreateUser"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
                 <TbWaveSawTool /> <span>Create User</span>
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -140,15 +140,39 @@ const Sidebar = () => {
             {isSHGOpen ? <FaChevronUp /> : <FaChevronDown />}
           </button>
           {isSHGOpen && (
-            <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+              <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
+                 <Link
+                href="/pages/ShgManagement/ShgDataUpload"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
-                <TbWaveSawTool /> <span>SHG Department</span>
-              </a>
-            </div>
-          )}
+                <TbWaveSawTool /> <span>SHG Data Upload</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/ShgGroup"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Group</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/CreateShgGroup"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create SHG Group</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/ShgMemberList"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Member List</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/CreateShgMember"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create SHG Member</span>
+              </Link>
+              </div>
+            )}
         </div>
 
         {/* SHG Loan Dropdown */}
@@ -165,12 +189,23 @@ const Sidebar = () => {
           </button>
           {isSHGLoanOpen && (
             <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+              <Link
+                href="/pages/ShgLoan/BankLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
-                <TbWaveSawTool /> <span>SHG Loan</span>
-              </a>
+                <TbWaveSawTool /> <span>Bank Loan</span>
+              </Link>
+              <Link
+                href="/pages/ShgLoan/InternalLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Internal Loan</span>
+              </Link>  <Link
+                href="/pages/ShgLoan/MemberWiseInternalLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Member Wise Internal Loan</span>
+              </Link>
             </div>
           )}
         </div>
@@ -191,15 +226,64 @@ const Sidebar = () => {
           </button>
           {isReportOpen && (
             <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+               <Link
+                href="/pages/Report/ShgGroupReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
-                <TbWaveSawTool /> <span>Report</span>
-              </a>
+                <TbWaveSawTool /> <span>SHG Group Report</span>
+              </Link> 
+              
+              <Link
+                href="/pages/Report/ShgMeetingSummaryReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Meeting Summary Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/ShgMemberReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Member Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/FPOReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>FPOReport</span>
+              </Link>
+              <Link
+                href="/pages/Report/FederationReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Federation Report</span>
+              </Link> 
+               <Link
+                href="/pages/Report/ActiveFarmerReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Active Farmer Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/DigiPaySakhiReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>DigiPay Sakhi Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/EnquiriesReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Enquiries Report</span>
+              </Link>
+             
+             
+            
+              
             </div>
           )}
+          <br/><br/><br/><br/>
         </div>
+        <br/><br/>
       </div>
     </div>
       </div>
@@ -278,24 +362,18 @@ const Sidebar = () => {
             </button>
             {isDepartmentsOpen && (
               <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-                <a
-                  href="#"
-                  className=" py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>Create Department</span>
-                </a>
-                <a
-                  href="#"
-                  className=" py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>Modify Department</span>
-                </a>
-                <a
-                  href="#"
-                  className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>View Department</span>
-                </a>
+                <Link
+                href="/pages/Departments/ListDepartments"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Department List</span>
+              </Link>
+              <Link
+                href="/pages/Departments/CreateDepartments"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create Department</span>
+              </Link>
               </div>
             )}
           </div>
@@ -315,12 +393,18 @@ const Sidebar = () => {
             </button>
             {isUserOpen && (
               <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-                <a
-                  href="#"
-                  className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>Create User</span>
-                </a>
+                 <Link
+                href="/pages/User/ListUser"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>User List</span>
+              </Link>
+              <Link
+                href="/pages/User/CreateUser"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create User</span>
+              </Link>
               </div>
             )}
           </div>
@@ -340,12 +424,36 @@ const Sidebar = () => {
             </button>
             {isSHGOpen && (
               <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-                <a
-                  href="#"
-                  className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>SHG Department</span>
-                </a>
+                 <Link
+                href="/pages/ShgManagement/ShgDataUpload"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Data Upload</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/ShgGroup"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Group</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/CreateShgGroup"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create SHG Group</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/ShgMemberList"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Member List</span>
+              </Link>
+              <Link
+                href="/pages/ShgManagement/CreateShgMember"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Create SHG Member</span>
+              </Link>
               </div>
             )}
           </div>
@@ -364,12 +472,23 @@ const Sidebar = () => {
             </button>
             {isSHGLoanOpen && (
               <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-                <a
-                  href="#"
-                  className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
-                >
-                  <TbWaveSawTool /> <span>SHG Loan</span>
-                </a>
+                  <Link
+                href="/pages/ShgLoan/BankLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Bank Loan</span>
+              </Link>
+              <Link
+                href="/pages/ShgLoan/InternalLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Internal Loan</span>
+              </Link>  <Link
+                href="/pages/ShgLoan/MemberWiseInternalLoan"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Member Wise Internal Loan</span>
+              </Link>
               </div>
             )}
           </div>
@@ -388,15 +507,62 @@ const Sidebar = () => {
               {isReportOpen ? <FaChevronUp /> : <FaChevronDown />}
             </button>
             {isReportOpen && (
-              <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
-              <a
-                href="#"
-                className="py-2 no-underline text-white text-left flex items-center space-x-2 text-[13px]"
+            <div className="mt-2 p-4 bg-gray-700 rounded-md shadow-lg">
+               <Link
+                href="/pages/Report/ShgGroupReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
               >
-                <TbWaveSawTool /> <span>Report</span>
-              </a>
+                <TbWaveSawTool /> <span>SHG Group Report</span>
+              </Link> 
+              
+              <Link
+                href="/pages/Report/ShgMeetingSummaryReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Meeting Summary Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/ShgMemberReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>SHG Member Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/FPOReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>FPOReport</span>
+              </Link>
+              <Link
+                href="/pages/Report/FederationReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Federation Report</span>
+              </Link> 
+               <Link
+                href="/pages/Report/ActiveFarmerReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Active Farmer Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/DigiPaySakhiReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>DigiPay Sakhi Report</span>
+              </Link>
+              <Link
+                href="/pages/Report/EnquiriesReport"
+                className="py-2 no-underline text-white text-left flex items-center space-x-2 cursor-pointer text-[13px]"
+              >
+                <TbWaveSawTool /> <span>Enquiries Report</span>
+              </Link>
+             
+             
+            
+              
             </div>
-            )}
+          )}
           </div>
         </div>
       </div>
