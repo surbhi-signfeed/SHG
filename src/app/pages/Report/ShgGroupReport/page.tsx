@@ -25,8 +25,16 @@ interface SHGData {
   shgId: string;
   groupName: string;
 }
-
+const menuItems = [
+  { key: '10', label: '10' },
+  { key: '25', label: '25' },
+  { key: '50', label: '50' },
+];
 const ShgGroupReport: React.FC = () => {
+  // Define the menu for Dropdown
+  const menu = {
+    items: menuItems,
+  };
   const [searchValue, setSearchValue] = useState("");
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
@@ -180,20 +188,11 @@ const ShgGroupReport: React.FC = () => {
                   {/* Left: Show Entries Dropdown */}
                   <div className="flex items-center space-x-2">
                     <span>show entries:</span>
-                    <Dropdown
-                      overlay={
-                        <Menu>
-                          <Menu.Item key="10">10</Menu.Item>
-                          <Menu.Item key="25">25</Menu.Item>
-                          <Menu.Item key="50">50</Menu.Item>
-                        </Menu>
-                      }
-                    >
-                      <Button>
-                        10 <MdKeyboardArrowDown />
-                        {/* Default value */}
-                      </Button>
-                    </Dropdown>
+                     <Dropdown menu={menu}>
+        <Button>
+          10 <MdKeyboardArrowDown />
+        </Button>
+      </Dropdown>
                   </div>
 
                   {/* Right: Search Input */}

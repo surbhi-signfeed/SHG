@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   Button,
@@ -25,8 +26,17 @@ interface SHGData {
   shgId: string;
   groupName: string;
 }
-
+const menuItems = [
+  { key: '10', label: '10' },
+  { key: '25', label: '25' },
+  { key: '50', label: '50' },
+];
 const ShgGroup: React.FC = () => {
+  // Define the menu for Dropdown
+  const menu = {
+    items: menuItems,
+  };
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
@@ -40,7 +50,10 @@ const ShgGroup: React.FC = () => {
     { key: "6", shgId: "UJSSHG2022_05", groupName: "JYOTI SHG" },
     { key: "7", shgId: "UJSSHG2022_06", groupName: "MADHU SHG" },
   ];
-
+  const handleEditClick = (record: SHGData) => {
+    // Redirect to the edit page with dynamic route based on the record key or any other identifier
+    router.push("/pages/ShgManagement/ShgGroup/UpdateShgGroup");
+  };
   const columns: ColumnsType<SHGData> = [
     {
       title: "SHG Group ID",
@@ -56,11 +69,16 @@ const ShgGroup: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="primary" icon={<EditOutlined />} className="bg-gray-700">
+        <Button
+          type="primary"
+          icon={<EditOutlined />}
+          className="bg-gray-700"
+          onClick={() => handleEditClick(record)} // Handle button click
+        >
           Edit
         </Button>
       ),
-    },
+    }
   ];
 
   const handleSearch = () => {
@@ -180,20 +198,11 @@ const ShgGroup: React.FC = () => {
                   {/* Left: Show Entries Dropdown */}
                   <div className="flex items-center space-x-2">
                     <span>show entries:</span>
-                    <Dropdown
-                      overlay={
-                        <Menu>
-                          <Menu.Item key="10">10</Menu.Item>
-                          <Menu.Item key="25">25</Menu.Item>
-                          <Menu.Item key="50">50</Menu.Item>
-                        </Menu>
-                      }
-                    >
-                      <Button>
-                        10 <MdKeyboardArrowDown />
-                        {/* Default value */}
-                      </Button>
-                    </Dropdown>
+                     <Dropdown menu={menu}>
+        <Button>
+          10 <MdKeyboardArrowDown />
+        </Button>
+      </Dropdown>
                   </div>
 
                   {/* Right: Search Input */}

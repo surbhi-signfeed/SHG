@@ -76,15 +76,30 @@ const data = [
   },
   // Add more data rows here
 ];
-
+const menuItems = [
+  { key: '10', label: '10' },
+  { key: '25', label: '25' },
+  { key: '50', label: '50' },
+];
 const RoleList = () => {
+    // Define the menu for Dropdown
+    const menu = {
+      items: menuItems,
+    };
+  
   const [searchText, setSearchText] = useState("");
 
   // Handle table change (pagination, sorting, etc.)
   const handleTableChange = (pagination: any, filters: any, sorter: any) => {
     console.log("Various parameters", pagination, filters, sorter);
   };
-
+<Menu
+    items={[
+      { key: '10', label: '10' },
+      { key: '25', label: '25' },
+      { key: '50', label: '50' },
+    ]}
+  />
   // Custom search input
   const searchInput = (
     <Input
@@ -123,17 +138,11 @@ const RoleList = () => {
                 {/* Left: Show Entries Dropdown */}
                 <div className="flex items-center space-x-2">
                   <span>show entries:</span>
-                  <Dropdown
-                    overlay={
-                      <Menu>
-                        <Menu.Item key="10">10</Menu.Item>
-                        <Menu.Item key="25">25</Menu.Item>
-                        <Menu.Item key="50">50</Menu.Item>
-                      </Menu>
-                    }
-                  >
-                    <Button>10 <MdKeyboardArrowDown/>{/* Default value */}</Button>
-                  </Dropdown>
+                  <Dropdown menu={menu}>
+        <Button>
+          10 <MdKeyboardArrowDown />
+        </Button>
+      </Dropdown>
                 </div>
 
                 {/* Right: Search Input */}

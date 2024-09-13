@@ -291,7 +291,7 @@ const Sidebar = () => {
       {/* Top Navbar */}
       <div className="lg:hidden fixed top-0 left-0 w-full h-16 bg-gray-800 text-white flex justify-between items-center px-4 z-20">
         <div className="text-lg font-bold">
-          <img src="../../img/logo.png" className="h-10" />
+          <img src="../../../img/logo.png" className="h-10" />
         </div>
         {/* Toggle Button (Visible only on mobile) */}
         

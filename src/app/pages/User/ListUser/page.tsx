@@ -1,88 +1,95 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Input, Button, Space, Dropdown, Menu } from "antd";
+import { useRouter } from "next/navigation"; 
+import {
+  Table,
+  Button,
+  Select,
+  Input,
+  Space,
+  Row,
+  Col,
+  Dropdown,
+  Menu,
+} from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import { IoMdSearch } from "react-icons/io";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { ConfigProvider, theme } from "antd";
+import { ColumnsType } from "antd/es/table";
 import Sidebar from "@/app/Component/Sidebar/page";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
+import { ConfigProvider, theme } from "antd";
+const { Option } = Select;
 
-const columns = [
-  {
-    title: "User",
-    dataIndex: "user",
-    sorter: true,
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    sorter: true,
-  },
-  {
-    title: "Create User",
-    dataIndex: "createUser",
-    sorter: true,
-  },
-  {
-    title: "Modify User",
-    dataIndex: "modifyUser",
-    sorter: true,
-  },
-  {
-    title: "View User",
-    dataIndex: "viewUser",
-    sorter: true,
-  },
-  {
-    title: "Create User",
-    dataIndex: "createUser",
-    sorter: true,
-  },
-  {
-    title: "Modify User",
-    dataIndex: "modifyUser",
-    sorter: true,
-  },
-  {
-    title: "User Report",
-    dataIndex: "userReport",
-    sorter: true,
-  },
-  {
-    title: "Data Report",
-    dataIndex: "dataReport",
-    sorter: true,
-  },
-  {
-    title: "History Report",
-    dataIndex: "historyReport",
-    sorter: true,
-  },
+interface SHGData {
+  key: string;
+  User: string;
+  Status: string;
+}
+const menuItems = [
+  { key: '10', label: '10' },
+  { key: '25', label: '25' },
+  { key: '50', label: '50' },
 ];
-
-const data = [
-  {
-    key: "1",
-    user: "Admin",
-    status: "Active",
-    createUser: "Yes",
-    modifyUser: "Yes",
-    viewUser: "Yes",
-    userReport: "Yes",
-    dataReport: "Yes",
-    historyReport: "Yes",
-  },
-  // Add more data rows here
-];
-
-const ListUser = () => {
+const ListUser: React.FC = () => {
+  // Define the menu for Dropdown
+  const menu = {
+    items: menuItems,
+  };
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const [field, setField] = useState("Name");
+  const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  const data: SHGData[] = [
+    { key: "1", User: "UJSBAN2023_01", Status: "SARASWATI SHG KHARKHADA" },
+    { key: "2", User: "UJSSHG2022_01", Status: "VISWASH SHG" },
+    { key: "3", User: "UJSSHG2022_02", Status: "MOUSAM SHG" },
+    { key: "4", User: "UJSSHG2022_03", Status: "SHALU SHG" },
+    { key: "5", User: "UJSSHG2022_04", Status: "MONIKA SHG" },
+    { key: "6", User: "UJSSHG2022_05", Status: "JYOTI SHG" },
+    { key: "7", User: "UJSSHG2022_06", Status: "MADHU SHG" },
+  ];
+   // Initialize router
 
-  // Handle table change (pagination, sorting, etc.)
-  const handleTableChange = (pagination: any, filters: any, sorter: any) => {
-    console.log("Various parameters", pagination, filters, sorter);
+  const handleEditClick = (record: SHGData) => {
+    // Redirect to the edit page with dynamic route based on the record key or any other identifier
+    router.push("/pages/User/UpdateUser");
   };
 
+  const columns: ColumnsType<SHGData> = [
+    {
+      title: "User",
+      dataIndex: "User",
+      key: "User",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      key: "Status",
+    },{
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          icon={<EditOutlined />}
+          className="bg-gray-700"
+          onClick={() => handleEditClick(record)} // Handle button click
+        >
+          Edit
+        </Button>
+      ),
+    }, 
+  ];
+
+  const handleSearch = () => {
+    console.log("Searching for:", searchValue);
+  };
+
+  const handleExport = () => {
+    console.log("Exporting XLSX...");
+  };
   // Custom search input
   const searchInput = (
     <Input
@@ -93,7 +100,6 @@ const ListUser = () => {
       suffix={<IoMdSearch />}
     />
   );
-
   return (
     <>
       <TopNavbar />
@@ -107,7 +113,7 @@ const ListUser = () => {
         {/* Main Content */}
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
           <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw] lg:mt-4">
-            User List
+  User List
           </h2>
 
           <div className="w-full">
@@ -116,42 +122,99 @@ const ListUser = () => {
                 algorithm: theme.defaultAlgorithm,
               }}
             >
-              {/* Controls Row */}
-              <div className="flex justify-between items-center my-4 px-4">
-                {/* Left: Show Entries Dropdown */}
-                <div className="flex items-center space-x-2">
-                  <span>show entries:</span>
-                  <Dropdown
-                    overlay={
-                      <Menu>
-                        <Menu.Item key="10">10</Menu.Item>
-                        <Menu.Item key="25">25</Menu.Item>
-                        <Menu.Item key="50">50</Menu.Item>
-                      </Menu>
-                    }
-                  >
-                    <Button>10 <MdKeyboardArrowDown/>{/* Default value */}</Button>
-                  </Dropdown>
+              <div>
+              {/* laptop */}
+               <Row justify="space-between" align="middle" style={{ marginBottom: 16 }} className="hidden lg:flex p-3">
+        <Col>
+          <Space>
+            {/* Field Dropdown */}
+            <Select defaultValue={field} onChange={(value) => setField(value)} style={{ width: 120 }}>
+              <Option value="Name">Name</Option>
+              <Option value="ID">ID</Option>
+            </Select>
+
+            {/* Type Dropdown */}
+            <Select defaultValue={type} onChange={(value) => setType(value)} style={{ width: 120 }}>
+              <Option value="like">like</Option>
+              <Option value="equal">equal</Option>
+              <Option value="not equal">not equal</Option>
+            </Select>
+
+            {/* Value Search Input */}
+            <Input 
+              placeholder="Search..." 
+              value={searchValue} 
+              onChange={(e) => setSearchValue(e.target.value)} 
+              style={{ width: 200 }} 
+            />
+
+            {/* Go Button */}
+            <Button type="primary" onClick={handleSearch} className='bg-gray-700'>Go</Button>
+          </Space>
+        </Col>
+
+        {/* Export XLSX Button */}
+        <Col>
+          <Button type="default" onClick={handleExport} className='bg-gray-700 text-white'>Export XLSX</Button>
+        </Col>
+      </Row>
+              {/* mobile */}
+               <div className=" lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4 p-3">
+        {/* Left section for dropdowns and search input */}
+        <div className="space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row">
+          {/* Field Dropdown */}
+          <Select defaultValue={field} onChange={(value) => setField(value)} className="w-full md:w-32">
+            <Option value="Name">Name</Option>
+            <Option value="ID">ID</Option>
+          </Select>
+
+          {/* Type Dropdown */}
+          <Select defaultValue={type} onChange={(value) => setType(value)} className="w-full md:w-32">
+            <Option value="like">like</Option>
+            <Option value="equal">equal</Option>
+            <Option value="not equal">not equal</Option>
+          </Select>
+
+          {/* Value Search Input */}
+          <Input
+            placeholder="Search..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="w-full md:w-64"
+          />
+
+          {/* Go Button */}
+          <Button type="primary" onClick={handleSearch} className="bg-gray-700 text-white">Go</Button>
+        </div>
+
+        {/* Export XLSX Button */}
+        <div className="flex justify-end md:justify-start">
+          <Button type="default" onClick={handleExport} className="bg-gray-700 text-white">
+            Export XLSX
+          </Button>
+        </div>
+      </div>
+
+                {/* Controls Row */}
+                <div className="flex justify-between items-center my-4 px-4">
+                  {/* Left: Show Entries Dropdown */}
+                  <div className="flex items-center space-x-2">
+                    <span>show entries:</span>
+                     <Dropdown menu={menu}>
+        <Button>
+          10 <MdKeyboardArrowDown />
+        </Button>
+      </Dropdown>
+                  </div>
+
+                  {/* Right: Search Input */}
+                  <div className="flex items-center">{searchInput}</div>
                 </div>
-
-                {/* Right: Search Input */}
-                <div className="flex items-center">{searchInput}</div>
-              </div>
-
-              {/* Table */}
-              <div className="px-4 my-4">
-                {" "}
-                {/* Add margin to separate the table from the controls */}
+                {/* Table */}
                 <Table
                   columns={columns}
                   dataSource={data}
-                  onChange={handleTableChange}
-                  pagination={{
-                    position: ["bottomRight"],
-                    defaultPageSize: 10,
-                  }}
-                  bordered
-                  size="middle"
+                  pagination={{ pageSize: 10 }}
                 />
               </div>
             </ConfigProvider>

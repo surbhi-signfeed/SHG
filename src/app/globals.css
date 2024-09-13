@@ -1,19 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-/* font  */
+
+/* Define the custom font using @font-face */
 @font-face {
-  font-family: "CustomFontB";
-  src: url("../../public/fonts/bi/BricolageGrotesque_72pt-Regular.ttf")
-    format("truetype");
+  font-family: "CustomFontRoboto";
+  src: url("../../public/fonts/roboto/Roboto-Regular.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
 }
-@font-face {
-  font-family: "CustomFontP";
-  src: url("../../public/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
-  font-weight: normal;
+
+/* Extend Tailwind's base layer to apply the font to the body */
+@layer base {
+  body {
+    @apply font-customRoboto;
+  }
 }
+
 /* Hide scrollbar but allow scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

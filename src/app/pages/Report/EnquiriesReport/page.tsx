@@ -180,20 +180,11 @@ const EnquiriesReport: React.FC = () => {
                   {/* Left: Show Entries Dropdown */}
                   <div className="flex items-center space-x-2">
                     <span>show entries:</span>
-                    <Dropdown
-                      overlay={
-                        <Menu>
-                          <Menu.Item key="10">10</Menu.Item>
-                          <Menu.Item key="25">25</Menu.Item>
-                          <Menu.Item key="50">50</Menu.Item>
-                        </Menu>
-                      }
-                    >
-                      <Button>
-                        10 <MdKeyboardArrowDown />
-                        {/* Default value */}
-                      </Button>
-                    </Dropdown>
+                     <Dropdown menu={menu}>
+        <Button>
+          10 <MdKeyboardArrowDown />
+        </Button>
+      </Dropdown>
                   </div>
 
                   {/* Right: Search Input */}
