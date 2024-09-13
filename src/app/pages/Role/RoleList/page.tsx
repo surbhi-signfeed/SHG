@@ -150,7 +150,7 @@ const RoleList = () => {
               </div>
 
               {/* Table */}
-              <div className="px-4 my-4">
+              <div className="px-4 my-4 overflow-x-auto">
                 {" "}
                 {/* Add margin to separate the table from the controls */}
                 <Table
@@ -161,6 +161,7 @@ const RoleList = () => {
                     position: ["bottomRight"],
                     defaultPageSize: 10,
                   }}
+                  
                   bordered
                   size="middle"
                 />

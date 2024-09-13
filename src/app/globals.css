@@ -11,10 +11,8 @@
 }
 
 /* Extend Tailwind's base layer to apply the font to the body */
-@layer base {
-  body {
-    @apply font-customRoboto;
-  }
+body {
+  font-family: 'CustomFontRoboto';
 }
 
 /* Hide scrollbar but allow scrolling */
