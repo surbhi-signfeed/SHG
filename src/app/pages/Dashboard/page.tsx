@@ -10,7 +10,7 @@ const Dashboard = () => {
     <>
       <TopNavbar />
 
-      <div className="flex">
+      <div className="flex font-customRoboto">
         {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">
           <Sidebar />
@@ -20,7 +20,7 @@ const Dashboard = () => {
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px]">
         <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw]">SHG Dashboard</h2>
           <div className="flex justify-center items-center">
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-4 p-4 max-w-screen-lg mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-4 p-2 max-w-screen-lg mx-auto">
               {/* Card 1 */}
                {/* Background shadow for 3D effect */}
   <div className="absolute top-0 left-0  bg-white rounded-lg transform translate-y-2 translate-x-2 z-0"></div>
@@ -29,7 +29,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                    <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -43,7 +43,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     2
                   </div>
                 </div>
@@ -57,7 +57,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     148
                   </div>
                 </div>
@@ -71,7 +71,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     10
                   </div>
                 </div>
@@ -85,7 +85,7 @@ const Dashboard = () => {
                 <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -99,7 +99,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <IoMdCard/>
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     510
                   </div>
                 </div>
@@ -111,7 +111,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                    <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -125,7 +125,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     2
                   </div>
                 </div>
@@ -139,7 +139,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     148
                   </div>
                 </div>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     10
                   </div>
                 </div>
@@ -167,7 +167,7 @@ const Dashboard = () => {
                 <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -181,7 +181,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <IoMdCard/>
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     510
                   </div>
                 </div>
@@ -193,7 +193,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                    <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -207,7 +207,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     2
                   </div>
                 </div>
@@ -221,7 +221,7 @@ const Dashboard = () => {
                   <div className="text-black text-[26px]">
                   <IoLocationOutline />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     148
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     10
                   </div>
                 </div>
@@ -249,7 +249,7 @@ const Dashboard = () => {
                 <div className="text-yellow-500 text-[26px]">
                   <HiOutlineUsers />
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     1
                   </div>
                 </div>
@@ -263,7 +263,7 @@ const Dashboard = () => {
                   <div className="text-yellow-500 text-[26px]">
                   <IoMdCard/>
                   </div>
-                  <div className="bg-green-600 text-white text-[12px] px-3 py-1 rounded-[50px]">
+                  <div className="bg-[#0D9488] text-white text-[12px] px-3 py-1 rounded-[50px]">
                     510
                   </div>
                 </div>

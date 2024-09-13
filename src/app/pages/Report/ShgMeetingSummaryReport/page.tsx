@@ -14,9 +14,13 @@ import {
 import { EditOutlined } from "@ant-design/icons";
 import { IoMdSearch } from "react-icons/io";
 import { ColumnsType } from "antd/es/table";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+
 import Sidebar from "@/app/Component/Sidebar/page";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
+import { MdOutlineViewList } from "react-icons/md";
+
 import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
@@ -61,11 +65,29 @@ const ShgMeetingSummaryReport: React.FC = () => {
       key: "groupName",
     },
     {
-      title: "Action",
+      title: "View Meeting",
       key: "action",
       render: (_, record) => (
-        <Button type="primary" icon={<EditOutlined />} className="bg-gray-700">
+        <Button type="primary" icon={<MdOutlineViewList />} className="bg-gray-700">
+          View
+        </Button>
+      ),
+    },
+    {
+      title: "Edit Meeting",
+      key: "action",
+      render: (_, record) => (
+        <Button type="primary" icon={<EditOutlined />} className="bg-white text-black">
           Edit
+        </Button>
+      ),
+    },
+    {
+      title: "Delete Meeting",
+      key: "action",
+      render: (_, record) => (
+        <Button type="primary" icon={<MdOutlineDeleteOutline /> } className="bg-red-700">
+          Delete
         </Button>
       ),
     },

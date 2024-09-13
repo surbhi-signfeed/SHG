@@ -22,7 +22,7 @@ const Sidebar = () => {
     <>
       {/* Sidebar  laptop*/}
       <div
-        className={` hidden md:flex fixed  left-0 h-[100vh] bg-[#2B2F3B]  text-white shadow-md z-10 lg:w-64 ${
+        className={` hidden font-customRoboto md:flex fixed  left-0 h-[100vh] bg-[#2B2F3B]  text-white shadow-md z-10 lg:w-64 ${
           isOpen ? "w-64" : "w-0"
         } transition-all duration-300 overflow-hidden lg:block  `}
         

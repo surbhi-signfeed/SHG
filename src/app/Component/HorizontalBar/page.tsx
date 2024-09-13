@@ -281,7 +281,7 @@ const HorizontalBar = () => {
         </div>
           {/* sidebar mobile */}
       {/* Top Navbar */}
-      <div className="lg:hidden fixed top-0 left-0 w-full h-16 bg-gray-800 text-white flex justify-between items-center px-4 z-20">
+      <div className="lg:hidden font-customRoboto fixed top-0 left-0 w-full h-16 bg-gray-800 text-white flex justify-between items-center px-4 z-20">
         <div className="text-lg font-bold">
           <img src="../../../img/logo.png" className="h-10" />
         </div>
@@ -297,7 +297,7 @@ const HorizontalBar = () => {
 
       {/* Sidebar */}
       <div
-        className={`lg:hidden fixed top-0 left-0 h-full bg-gray-900 text-white shadow-md z-10 transition-transform duration-300 w-64 ${
+        className={`lg:hidden font-customRoboto fixed top-0 left-0 h-full bg-gray-900 text-white shadow-md z-10 transition-transform duration-300 w-64 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
