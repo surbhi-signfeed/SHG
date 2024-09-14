@@ -25,7 +25,7 @@ const Login = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
         <div className="text-center mb-6">
           {/* Replace with the actual logo */}
-          <img src="../../../../public/img/logo.png" alt="Logo" className="mx-auto h-10 mb-2" />
+          <img src="../img/ujslogo.png" alt="Logo" className="mx-auto h-10 mb-2" />
           <h1 className="text-xl font-semibold">Sign In</h1>
         </div>
         {isLoggedIn ? (

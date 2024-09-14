@@ -6,7 +6,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { ConfigProvider, theme } from "antd";
 import Sidebar from "@/app/Component/Sidebar/page";
 import TopNavbar from "@/app/Component/Topnavbar/page";
-
+import { FaSortUp, FaSortDown, FaSort } from "react-icons/fa";
 const columns = [
   {
     title: "Role",
@@ -38,7 +38,7 @@ const columns = [
     dataIndex: "createRole",
     sorter: true,
   },
-  {
+  { 
     title: "Modify Role",
     dataIndex: "modifyRole",
     sorter: true,
