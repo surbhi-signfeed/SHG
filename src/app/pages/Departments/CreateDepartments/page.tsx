@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
-import { Form, Input, Button, Checkbox, Select } from "antd";
+import { Form, Input, Button, Select } from "antd";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import Sidebar from "@/app/Component/Sidebar/page";
+import axios from 'axios'; // Import Axios
+import SecureStorage from 'react-secure-storage'; // Import SecureStorage
 
 const { Option } = Select;
 
@@ -11,8 +13,44 @@ const CreateDepartments: React.FC = () => {
   const [form] = Form.useForm();
 
   // Function to handle form submission
-  const onFinish = (values: any) => {
-    console.log("Form Submitted:", values);
+  const onFinish = async (values: any) => {
+    try {
+      // Log form values
+      console.log("Form Values:", values);
+
+      // Convert 'Active' to true and 'Inactive' to false
+      const status = values.status === "Active"; // Converts 'Active' to true, 'Inactive' to false
+
+      // Retrieve the token from SecureStorage
+      const token = SecureStorage.getItem('accessToken');
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      // Prepare the data to be sent
+      const requestData = {
+        department_name: values.department_name,
+        status: status,
+      };
+
+      // Log request data
+      console.log("Request Data:", requestData);
+
+      // Make POST request to API
+      const response = await axios.post('http://localhost:4000/ujs/AddDepartment', requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      // Handle successful response
+      console.log("Form Submitted Successfully:", response.data);
+      form.resetFields(); // Optionally reset the form fields
+
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   // Function to handle form reset
@@ -40,29 +78,21 @@ const CreateDepartments: React.FC = () => {
               form={form}
               layout="vertical"
               onFinish={onFinish}
-              className="bg-white p-6  rounded-lg"
+              className="bg-white p-6 rounded-lg"
+              initialValues={{ status: "Active" }} // Set default value for status
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Form.Item name="DepartmentName" className="text-gray-600">
-                  {" "}
-                  <h4 className="font-semibold mb-2 text-[14px] text-gray-600">
-                   Department Name
-                  </h4>
+                <Form.Item name="department_name" className="text-gray-600" label="Department Name">
                   <Input placeholder="Enter Department Name" />
                 </Form.Item>
 
-                <Form.Item name="status">
-                  <h4 className="font-semibold mb-2 text-[14px] text-gray-600">
-                    Status
-                  </h4>
-                  <Select defaultValue="Active">
+                <Form.Item name="status" label="Status">
+                  <Select>
                     <Option value="Active">Active</Option>
                     <Option value="Inactive">Inactive</Option>
                   </Select>
                 </Form.Item>
               </div>
-
-              
 
               <div className="flex justify-between mt-6">
                 <Button

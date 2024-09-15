@@ -2,18 +2,41 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import axios from 'axios'; // Import axios for API calls
+import SecureStorage from 'react-secure-storage'; // Import react-secure-storage
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login success
   const router = useRouter(); // Initialize useRouter
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login logic
-    console.log('Login:', { email, password });
-    setIsLoggedIn(true); // Set login success state
-    router.push("/pages/Dashboard")
+    try {
+      // Call the login API
+      const response = await axios.post('http://localhost:4000/auth/login', {
+        email,
+        password,
+      });
+
+      // Extract token from response
+      console.log("token",response)
+      const { accessToken } = response.data;
+
+      // Store token in secure storage
+      SecureStorage .setItem('accessToken', accessToken);
+
+      // Set login success state
+      setIsLoggedIn(true);
+
+      // Redirect to dashboard
+      router.push("/pages/Dashboard");
+    } catch (error) {
+      console.error('Login failed:', error);
+      // Handle login failure (e.g., show an error message)
+    }
   };
 
   const handleBack = () => {
@@ -37,7 +60,7 @@ const Login = () => {
                 Email Address
               </label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +85,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-2 bg-gray-700 text-white font-bold rounded-md  transition"
+              className="w-full py-2 bg-gray-700 text-white font-bold rounded-md transition"
             >
               LOGIN NOW
             </button>
@@ -71,7 +94,7 @@ const Login = () => {
         <button
           type="button"
           onClick={handleBack}
-          className="mt-4 w-full py-2 bg-white text-black font-bold rounded-md  transition"
+          className="mt-4 w-full py-2 bg-white text-black font-bold rounded-md transition"
         >
           BACK NOW
         </button>
