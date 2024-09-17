@@ -5,14 +5,94 @@ import { Form, Input, Button, Checkbox, Select,DatePicker} from 'antd';
 import TopNavbar from '@/app/Component/Topnavbar/page';
 import Sidebar from '@/app/Component/Sidebar/page';
 import moment from 'moment';
+import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
+import SecureStorage from 'react-secure-storage';
 const { Option } = Select;
 
 const CreateShgMember: React.FC = () => {
   const [form] = Form.useForm();
 
   // Function to handle form submission
-  const onFinish = (values: any) => {
-    console.log('Form Submitted:', values);
+  const onFinish = async (values: any) => {
+    try {
+      // Log form values
+      console.log("Form Values:", values);
+
+      // Convert 'Active' to true and 'Inactive' to false
+      const status = values.status === "Active"; // Converts 'Active' to true, 'Inactive' to false
+
+      // Retrieve the token from SecureStorage
+      const token = SecureStorage.getItem('accessToken');
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      // Prepare the data to be sent
+      const requestData = {
+        group_id: values.groupId, // Group Id
+        group_name: values.groupName, // Group Name
+        member_name: values.memberName, // Leader Name
+        leader_name: values.leaderName, // Leader Name
+
+        husband_father_name: values.husbandFatherName, // Husband/Father Name
+        state_name: values.stateName, // State Name
+        district_name: values.districtName, // District Name
+        village_name: values.villageName, // Village Name
+        block_taluka: values.blockTaluka, // Block Taluka
+        gram_panchayat: values.grampanchayat, // Gram Panchayat
+        pin_code: values.pinCode, // Pin Code
+        gender: values.gender, // Gender
+        mobile: values.mobile, // Mobile
+        whatsapp: values.whatsapp, // WhatsApp
+        email: values.email, // Email
+        dob: values.dob ? moment(values.dob).format('YYYY-MM-DD') : null, // DOB
+        aadhar_number: values.aadharNo, // Aadhar No
+        education: values.education, // Education
+        primary_occupation: values.primaryOccupation, // Primary Occupation
+        religion: values.religion, // Religion
+        house_number: values.houseNo, // House No
+        bank_name: values.bankName, // Bank Name
+        bank_branch: values.bankBranch, // Bank Branch
+        bank_account: values.bankAC, // Bank Account
+        bank_ifsc: values.bankIFSC, // Bank IFSC
+        aadhar_seeding_status: values.aadharSeedingStatus, // Aadhar Seeding Status
+        voter_number: values.voterNum, // Voter Number
+        mnrega_number: values.mnregaNum, // MNREGA Number
+        category: values.category, // Category
+        loan_taken: values.loanTaken, // Loan Taken
+        mfi_bank_loan: values.mfiBankLoan, // MFI Bank Loan
+        annual_income: parseInt(values.annualIncome,10), // Annual Income
+        differently_abled: values.differentlyAbled, // Differently Abled
+        total_household_member: parseInt(values.totalHouseholdMember, 10), // Total Household Member
+        total_monthly_saving: parseInt(values.totalMonthlySaving,10), // Total Monthly Saving
+        total_federation_saving: parseInt(values.totalFederationSaving,10), // Total Federation Saving
+        status: values.status === 'active' ? true : false, // Status
+      };
+      
+      
+
+      // Log request data
+      console.log("Request Data:", requestData);
+
+      // Make POST request to API
+      const response = await axios.post('http://localhost:4000/ujs/AddShgMember', requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+      // Handle successful response
+      console.log("Form Submitted Successfully:", response.data);
+      form.resetFields(); // Optionally reset the form fields
+      toast.success('Form submitted successfully!');
+
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error('Failed to submit the form. Please try again.');
+
+    }
   };
 
   // Function to handle form reset
@@ -74,10 +154,13 @@ const CreateShgMember: React.FC = () => {
           <Form.Item name="pinCode" label="Pin Code">
             <Input placeholder="Pin Code" />
           </Form.Item>
+       
           <Form.Item name="gender" label="Gender">
-            <Input placeholder="Gender" />
+            <Select placeholder="Select status">
+              <Option value="Female">Female</Option>
+              <Option value="Male">Male</Option>
+            </Select>
           </Form.Item>
-
           {/* Row 3 */}
         
           <Form.Item name="mobile" label="Mobile">
@@ -144,22 +227,14 @@ const CreateShgMember: React.FC = () => {
           <Form.Item name="annualIncome" label="Annual Income">
             <Input placeholder="Annual Income" />
           </Form.Item>
+        
           <Form.Item name="differentlyAbled" label="Differently Abled">
-            <Input placeholder="Differently Abled" />
+            <Select placeholder="Differently Abled">
+              <Option value="yes">Yes</Option>
+              <Option value="no">No</Option>
+            </Select>
           </Form.Item>
-          {/* Row 5 */}
-         
-         
-         
-         
-
-          {/* Row 7 */}
-        
-        
-
-          {/* Row 8 */}
-        
-         
+                  
           <Form.Item name="totalHouseholdMember" label="Total Household Member">
             <Input placeholder="Total Household Member" />
           </Form.Item>

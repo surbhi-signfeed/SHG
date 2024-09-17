@@ -6,7 +6,8 @@ import TopNavbar from "@/app/Component/Topnavbar/page";
 import Sidebar from "@/app/Component/Sidebar/page";
 import axios from 'axios'; // Import Axios
 import SecureStorage from 'react-secure-storage'; // Import SecureStorage
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const { Option } = Select;
 
 const CreateDepartments: React.FC = () => {
@@ -44,13 +45,14 @@ const CreateDepartments: React.FC = () => {
         }
       });
 
-      // Handle successful response
-      console.log("Form Submitted Successfully:", response.data);
-      form.resetFields(); // Optionally reset the form fields
+     // Handle successful response
+     console.log("Form Submitted Successfully:", response.data);
+     form.resetFields(); // Optionally reset the form fields
+     toast.success('Form submitted successfully!');
+   } catch (error) {
+     console.error("Error submitting form:", error);
 
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
+   }
   };
 
   // Function to handle form reset
@@ -61,7 +63,7 @@ const CreateDepartments: React.FC = () => {
   return (
     <>
       <TopNavbar />
-
+      <ToastContainer />
       <div className="flex bg-gray-100">
         {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">
