@@ -62,6 +62,8 @@ const BankLoan: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
@@ -99,6 +101,7 @@ const BankLoan: React.FC = () => {
           loan_period: item.loan_period,
         }));
         setData(formattedData);
+        setOriginalData(formattedData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -107,7 +110,17 @@ const BankLoan: React.FC = () => {
     fetchData();
   }, []);
 
-  
+   // Filter the data based on the search text
+   useEffect(() => {
+    if (searchText.trim() === "") {
+      setData(originalData); // Show all data if search input is empty
+    } else {
+      const result = originalData.filter(item =>
+        item.bank_name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(result);
+    }
+  }, [searchText, originalData]); 
 
   // Handle page size change from dropdown
   const handleMenuClick = (e: any) => {

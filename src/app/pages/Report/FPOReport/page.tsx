@@ -52,6 +52,7 @@ const FPOReport: React.FC = () => {
   const router = useRouter();
   const [data, setData] = useState<SHGData[]>([]);
   const [searchValue, setSearchValue] = useState("");
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
@@ -80,6 +81,7 @@ const FPOReport: React.FC = () => {
           land_record: item.land_record,
         }));
         setData(formattedData);
+        setOriginalData(formattedData); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -88,7 +90,17 @@ const FPOReport: React.FC = () => {
     fetchData();
   }, []);
 
-  
+    // Filter the data based on the search text
+    useEffect(() => {
+      if (searchText.trim() === "") {
+        setData(originalData); // Show all data if search input is empty
+      } else {
+        const result = originalData.filter(item =>
+          item.member_sharholder.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setData(result);
+      }
+    }, [searchText, originalData]); 
 
   // Handle page size change from dropdown
   const handleMenuClick = (e: any) => {

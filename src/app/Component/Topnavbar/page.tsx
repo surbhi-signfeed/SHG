@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const TopNavbar = () => {
@@ -13,7 +14,7 @@ const TopNavbar = () => {
            style={{background: "linear-gradient(164deg, rgba(114,130,153,1) 0%, rgba(44,53,66,1) 60%, rgba(34,42,53,1) 100%"}}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
           <div className="flex items-center">
-            <img src='../../../img/logo.png' className='h-10' alt="Logo" />
+            <Link href='/pages/Dashboard'><img src='../../../img/logo.png' className='h-10 cursor-pointer' alt="Logo" /></Link>
             <div className="ml-[14vw] text-lg font-semibold">
               <span className='text-gray-500'>|</span> <span>Application &gt; </span>
               <span className="text-gray-300">Dashboard</span>

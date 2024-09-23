@@ -72,21 +72,22 @@ const ListRole: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
-    console.log("ol",permissions)
+    console.log("ol", permissions)
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_role' && p.active === 1);
     const viewPermission = permissions.some((p: any) => p.permission_name === 'view_role' && p.active === 1);
     setHasModifyPermission(modifyPermission);
     setHasViewPermission(viewPermission);
 
-  
-  }, [hasModifyPermission,hasViewPermission]);
 
- 
+  }, [hasModifyPermission, hasViewPermission]);
+
+
 
 
   useEffect(() => {
@@ -106,6 +107,7 @@ const ListRole: React.FC = () => {
           Status: item.active,
         }));
         setData(formattedData);
+        setOriginalData(formattedData); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -113,10 +115,22 @@ const ListRole: React.FC = () => {
 
     fetchData();
   }, []);
+   // Filter the data based on the search text
+   useEffect(() => {
+    if (searchText.trim() === "") {
+      setData(originalData); // Show all data if search input is empty
+    } else {
+      const result = originalData.filter(item =>
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(result);
+    }
+  }, [searchText, originalData]); 
+ 
   const handleEditClick = (record: SHGData) => {
     router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
   };
-  
+
 
   // Handle page size change from dropdown
   const handleMenuClick = (e: any) => {
@@ -144,29 +158,29 @@ const ListRole: React.FC = () => {
       title: permission.replace(/_/g, " "), // Display permission name as column title with spaces
       dataIndex: permission,
       key: permission,
-      render: (_:any, record:any) => (
+      render: (_: any, record: any) => (
         <span>{record.permissions.includes(permission) ? "Yes" : "No"}</span>
       ),
     })),
     ...(hasModifyPermission
       ? [
-          {
-            title: "Action",
-            key: "action",
-            render: (_: any, record: SHGData) => (
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                className="bg-gray-700"
-                onClick={() => handleEditClick(record)}
-              >
-                Edit
-              </Button>
-            ),
-          },
-        ]
+        {
+          title: "Action",
+          key: "action",
+          render: (_: any, record: SHGData) => (
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              className="bg-gray-700"
+              onClick={() => handleEditClick(record)}
+            >
+              Edit
+            </Button>
+          ),
+        },
+      ]
       : []), // If no permission, omit the column entirely
-  
+
   ];
 
   const handleSearch = () => {
@@ -186,34 +200,34 @@ const ListRole: React.FC = () => {
   const menu = (
     <Menu onClick={handleMenuClick} items={menuItems} /> // Add onClick handler
   );
-// download excel file
-const exportToExcel = (data: any[]) => {
-  if (data.length === 0) return; // Ensure there is data to export
+  // download excel file
+  const exportToExcel = (data: any[]) => {
+    if (data.length === 0) return; // Ensure there is data to export
 
-  // Create a new workbook
-  const workbook = XLSX.utils.book_new();
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
 
-  // Extract headers dynamically from the first item in the data array
-  const headers = Object.keys(data[0]);
+    // Extract headers dynamically from the first item in the data array
+    const headers = Object.keys(data[0]);
 
-  // Create a worksheet using the data array directly
-  const worksheetData = data.map(item => {
+    // Create a worksheet using the data array directly
+    const worksheetData = data.map(item => {
       const row: any = {};
       headers.forEach(header => {
-          row[header] = item[header];
+        row[header] = item[header];
       });
       return row;
-  });
+    });
 
-  // Convert to worksheet
-  const worksheet = XLSX.utils.json_to_sheet(worksheetData, { header: headers });
+    // Convert to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData, { header: headers });
 
-  // Add the worksheet to the workbook
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Departments');
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Departments');
 
-  // Create an Excel file and trigger the download when user clicks the button
-  XLSX.writeFile(workbook, 'DepartmentData.xlsx');
-};
+    // Create an Excel file and trigger the download when user clicks the button
+    XLSX.writeFile(workbook, 'DepartmentData.xlsx');
+  };
   return (
     <>
       <TopNavbar />
@@ -279,16 +293,16 @@ const exportToExcel = (data: any[]) => {
                 </div>
 
                 {/* Table with dynamic page size */}
-                {hasViewPermission!==null && hasViewPermission?(<>
+                {hasViewPermission !== null && hasViewPermission ? (<>
                   <div style={{ overflowX: 'auto' }}>
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize }} // Use dynamic page size
-      />
-    </div>
-                </>):"no access"}
-               
+                    <Table
+                      columns={columns}
+                      dataSource={data}
+                      pagination={{ pageSize }} // Use dynamic page size
+                    />
+                  </div>
+                </>) : "no access"}
+
               </div>
             </ConfigProvider>
           </div>

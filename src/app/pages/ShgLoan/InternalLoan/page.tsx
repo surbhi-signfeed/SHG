@@ -62,6 +62,8 @@ const InternalLoan: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
@@ -69,7 +71,7 @@ const InternalLoan: React.FC = () => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol",permissions)
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'edit_group_internal_loan' && p.active === 1);
-    const viewPermission = permissions.some((p: any) => p.permission_name === 'view_group-internal_loan' && p.active === 1);
+    const viewPermission = permissions.some((p: any) => p.permission_name === 'view_group_internal_loan' && p.active === 1);
     setHasModifyPermission(modifyPermission);
     setHasViewPermission(viewPermission);
 
@@ -97,6 +99,7 @@ const InternalLoan: React.FC = () => {
           loan_amt: item.loan_amt,
         }));
         setData(formattedData);
+        setOriginalData(formattedData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -105,6 +108,25 @@ const InternalLoan: React.FC = () => {
     fetchData();
   }, []);
 
+   // Filter the data based on the search text
+   useEffect(() => {
+    if (searchText.trim() === "") {
+      setData(originalData); // Show all data if search input is empty
+    } else {
+      // Check if the searchText is a valid number
+      const isNumeric = !isNaN(Number(searchText));
+  
+      const result = originalData.filter(item => {
+        // Only filter by group_id if searchText is numeric
+        if (isNumeric) {
+          return item.group_id === Number(searchText); // Compare as number
+        }
+        return false; // Do not return any items if not a number
+      });
+  
+      setData(result);
+    }
+  }, [searchText, originalData]);
   
 
   // Handle page size change from dropdown

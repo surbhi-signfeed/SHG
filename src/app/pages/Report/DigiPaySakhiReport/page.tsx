@@ -50,6 +50,7 @@ const DigiPaySakhiReport: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
 
   // Fetch data from API when the component mounts
@@ -75,6 +76,7 @@ const DigiPaySakhiReport: React.FC = () => {
           cscId: item.cscId,
         }));
         setData(formattedData);
+        setOriginalData(formattedData); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -83,7 +85,18 @@ const DigiPaySakhiReport: React.FC = () => {
     fetchData();
   }, []);
 
-  
+    // Filter the data based on the search text
+    useEffect(() => {
+      if (searchText.trim() === "") {
+        setData(originalData); // Show all data if search input is empty
+      } else {
+        const result = originalData.filter(item =>
+          item.state.toLowerCase().includes(searchText.toLowerCase())
+        );
+        console.log("",result)
+        setData(result);
+      }
+    }, [searchText, originalData]); 
 
   // Handle page size change from dropdown
   const handleMenuClick = (e: any) => {

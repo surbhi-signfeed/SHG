@@ -46,6 +46,7 @@ const ShgGroup: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
@@ -59,8 +60,7 @@ const ShgGroup: React.FC = () => {
 
   
   }, [hasModifyPermission,hasViewPermission]);
-  // Fetch data from API when the component mounts
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
       try {
         const token = SecureStorage.getItem('accessToken');
@@ -78,13 +78,26 @@ const ShgGroup: React.FC = () => {
           Status: item.status,
         }));
         setData(formattedData);
+        setOriginalData(formattedData); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // Fetch data from API when the component mounts
+  
+  // Filter the data based on the search text
+  useEffect(() => {
+    if (searchText.trim() === "") {
+      setData(originalData); // Show all data if search input is empty
+    } else {
+      const result = originalData.filter(item =>
+        item.group_name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setData(result);
+    }
+  }, [searchText, originalData]); 
   const handleEditClick = (record: SHGData) => {
     router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
   };

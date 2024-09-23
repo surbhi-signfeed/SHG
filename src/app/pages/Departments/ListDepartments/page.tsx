@@ -44,6 +44,7 @@ const ListDepartments: React.FC = () => {
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
@@ -59,9 +60,18 @@ const ListDepartments: React.FC = () => {
   }, [hasModifyPermission,hasViewPermission]);
 
  
-
-
   useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+      // Fetch data only if token exists
+      fetchData();
+    }
+  }, []); 
+
+ 
     const fetchData = async () => {
       try {
         const token = SecureStorage.getItem('accessToken');
@@ -77,13 +87,24 @@ const ListDepartments: React.FC = () => {
           Status: item.status,
         }));
         setData(formattedData);
+        setOriginalData(formattedData); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    fetchData();
-  }, []);
+ 
+    // Filter the data based on the search text
+    useEffect(() => {
+      if (searchText.trim() === "") {
+        setData(originalData); // Show all data if search input is empty
+      } else {
+        const result = originalData.filter(item =>
+          item.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setData(result);
+      }
+    }, [searchText, originalData]); 
   const handleEditClick = (record: SHGData) => {
     router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
   };

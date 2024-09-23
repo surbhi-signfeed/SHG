@@ -35,6 +35,7 @@ const menuItems = [
   { key: '50', label: '50' },
 ];
 const ShgMeetingSummaryReport: React.FC = () => {
+  const [originalData, setOriginalData] = useState<SHGData[]>([]);
   // Define the menu for Dropdown
   const menu = {
     items: menuItems,

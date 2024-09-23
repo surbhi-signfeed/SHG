@@ -1,10 +1,9 @@
 'use client'; // Directive for Next.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import axios from 'axios'; // Import axios for API calls
 import SecureStorage from 'react-secure-storage'; // Import react-secure-storage
-
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +11,7 @@ const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login success
   const router = useRouter(); // Initialize useRouter
 
+  // Function to handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -21,15 +21,23 @@ const Login = () => {
         password,
       });
 
-      // Extract token from response
-      console.log("token",response)
-      const { accessToken ,role} = response.data;
+      // Extract token and role from response
+      const { accessToken, role } = response.data;
 
-      // Store token in secure storage
-      SecureStorage .setItem('accessToken', accessToken);
-      SecureStorage .setItem('id', role);
+      // Store token and role in secure storage
+      SecureStorage.setItem('accessToken', accessToken);
+      SecureStorage.setItem('id', role);
+
       // Set login success state
       setIsLoggedIn(true);
+
+      // Set a timeout to remove the token after 1 minute
+      setTimeout(() => {
+        SecureStorage.removeItem('accessToken');
+        SecureStorage.removeItem('id');
+        setIsLoggedIn(false); // Update state to reflect the user is logged out
+        router.push('/'); // Redirect to login page
+      }, 3000000); // 1 minute (60000 milliseconds)
 
       // Redirect to dashboard
       router.push("/pages/Dashboard");
@@ -43,11 +51,18 @@ const Login = () => {
     router.back(); // Navigate back to the previous page
   };
 
+  // Effect to check for token on component mount
+  useEffect(() => {
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      setIsLoggedIn(false); // If no token, set logged-in state to false
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
         <div className="text-center mb-6">
-          {/* Replace with the actual logo */}
           <img src="../img/ujslogo.png" alt="Logo" className="mx-auto h-10 mb-2" />
           <h1 className="text-xl font-semibold">Sign In</h1>
         </div>
