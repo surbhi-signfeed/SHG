@@ -19,6 +19,8 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import { ConfigProvider, theme } from "antd";
 import HorizontalBar from "@/app/Component/HorizontalBar/page";
+import SecureStorage from 'react-secure-storage'
+import { useRouter } from "next/navigation";
 const { Option } = Select;
 
 interface SHGData {
@@ -32,6 +34,16 @@ const ShgGroup: React.FC = () => {
     const [field, setField] = useState("Name");
     const [type, setType] = useState("like");
     const [searchText, setSearchText] = useState("");
+    const router =useRouter();
+    React.useEffect(() => {
+      // Check if the token exists in SecureStorage
+      const token = SecureStorage.getItem('accessToken');
+      if (!token) {
+        router.push("/"); // Redirect to login page if token is not present
+      } else {
+      
+      }
+    }, []); 
     const data: SHGData[] = [
         { key: "1", shgId: "UJSBAN2023_01", groupName: "SARASWATI SHG KHARKHADA" },
 

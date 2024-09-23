@@ -67,6 +67,15 @@ const menuItems = [
 
 const ListRole: React.FC = () => {
   const router = useRouter();
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   const [data, setData] = useState<SHGData[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [field, setField] = useState("Name");

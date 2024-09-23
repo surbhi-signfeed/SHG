@@ -52,7 +52,15 @@ const DigiPaySakhiReport: React.FC = () => {
   const [searchText, setSearchText] = useState("");
   const [originalData, setOriginalData] = useState<SHGData[]>([]);
   const [pageSize, setPageSize] = useState(5); // Add page size state
-
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   // Fetch data from API when the component mounts
   useEffect(() => {
     const fetchData = async () => {

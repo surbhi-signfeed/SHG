@@ -8,6 +8,7 @@ import moment from 'moment';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import SecureStorage from 'react-secure-storage';
+import { useRouter } from 'next/navigation';
 const { Option } = Select;
 interface SHGData {
   key: string;
@@ -20,9 +21,19 @@ interface SHGData {
 }
 const CreateShgMember: React.FC = () => {
   const [form] = Form.useForm();
+  const router=useRouter();
   const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
   const [data, setData] = useState<SHGData[]>([]);
   const [stateData, setStateData] = useState<any[]>([]);
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol", permissions)

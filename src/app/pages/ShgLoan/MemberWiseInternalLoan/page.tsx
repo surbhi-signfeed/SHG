@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Button,
@@ -18,6 +18,8 @@ import Sidebar from "@/app/Component/Sidebar/page";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import { ConfigProvider, theme } from "antd";
+import SecureStorage from 'react-secure-storage'
+import { useRouter } from "next/navigation";
 const { Option } = Select;
 
 interface SHGData {
@@ -31,6 +33,16 @@ const menuItems = [
   { key: '50', label: '50' },
 ];
 const MemberWiseInternalLoan: React.FC = () => {
+  const router =useRouter();
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   // Define the menu for Dropdown
   const menu = {
     items: menuItems,

@@ -54,6 +54,15 @@ const ShgMemberReport: React.FC = () => {
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
   useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    fetchData();
+    }
+  }, []); 
+  useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol",permissions)
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_department' && p.active === 1);
@@ -63,8 +72,7 @@ const ShgMemberReport: React.FC = () => {
 
   
   }, [hasModifyPermission,hasViewPermission]);
-  // Fetch data from API when the component mounts
-  useEffect(() => {
+
     const fetchData = async () => {
       try {
         const token = SecureStorage.getItem('accessToken');
@@ -91,8 +99,7 @@ const ShgMemberReport: React.FC = () => {
       }
     };
 
-    fetchData();
-  }, []);
+
 
     // Filter the data based on the search text
     useEffect(() => {

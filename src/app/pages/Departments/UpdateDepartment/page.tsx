@@ -1,15 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox, Select } from "antd";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import Sidebar from "@/app/Component/Sidebar/page";
-
+import SecureStorage from "react-secure-storage";
+import { useRouter } from "next/navigation";
 const { Option } = Select;
 
 const Edit: React.FC = () => {
   const [form] = Form.useForm();
-
+  const router=useRouter();
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   // Function to handle form submission
   const onFinish = (values: any) => {
     console.log("Form Submitted:", values);

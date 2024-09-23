@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from 'axios'; // Import axios for API calls
 import SecureStorage from 'react-secure-storage'; // Import SecureStorage for token management
+import axios from 'axios'; // Import axios for API calls
 import {
   Table,
   Button,
@@ -21,7 +21,7 @@ import Sidebar from "@/app/Component/Sidebar/page";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import * as XLSX from 'xlsx';
-import secureLocalStorage from "react-secure-storage";
+
 import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
@@ -50,6 +50,15 @@ const ListUser: React.FC = () => {
   const [pageSize, setPageSize] = useState(5); // Add page size state
   const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
+  React.useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol",permissions)

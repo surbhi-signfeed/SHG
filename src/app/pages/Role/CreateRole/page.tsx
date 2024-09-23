@@ -9,13 +9,22 @@ import axios from 'axios'; // Import Axios
 import SecureStorage from 'react-secure-storage'; // Import SecureStorage
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useRouter } from 'next/navigation';
 const { Option } = Select;
 
 const CreateRole: React.FC = () => {
   const [form] = Form.useForm();
+  const router =useRouter();
   const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
-
+  useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol",permissions)

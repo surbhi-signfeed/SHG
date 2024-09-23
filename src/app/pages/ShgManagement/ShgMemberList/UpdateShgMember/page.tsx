@@ -5,11 +5,22 @@ import { Form, Input, Button, Checkbox, Select,DatePicker} from 'antd';
 import TopNavbar from '@/app/Component/Topnavbar/page';
 import Sidebar from '@/app/Component/Sidebar/page';
 import moment from 'moment';
+import SecureStorage from 'react-secure-storage'
+import { useRouter } from 'next/navigation';
 const { Option } = Select;
 
 const UpdateShgMember: React.FC = () => {
   const [form] = Form.useForm();
-
+  const router = useRouter();
+  React.useEffect(() => {
+    // Check if the token exists in SecureStorage
+    const token = SecureStorage.getItem('accessToken');
+    if (!token) {
+      router.push("/"); // Redirect to login page if token is not present
+    } else {
+    
+    }
+  }, []); 
   // Function to handle form submission
   const onFinish = (values: any) => {
     console.log('Form Submitted:', values);
