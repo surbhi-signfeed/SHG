@@ -26,12 +26,12 @@ const { Option } = Select;
 
 interface SHGData {
   gender: any;
-  pin: any;
-  gram_panchayat: any;
+  mobile: any;
+  animator_name: any;
   key: string;
   group_name: string;
   Status: string;
-  group_leader:string;
+  member_name:string;
   total_member:string
 
 }
@@ -50,7 +50,18 @@ const ShgMemberList: React.FC = () => {
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(5); // Add page size state
+  const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
+  const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'edit_member' && p.active === 1);
+    const viewPermission = permissions.some((p: any) => p.permission_name === 'view_member' && p.active === 1);
+    setHasModifyPermission(modifyPermission);
+    setHasViewPermission(viewPermission);
 
+  
+  }, [hasModifyPermission,hasViewPermission]);
   // Fetch data from API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
@@ -65,10 +76,10 @@ const ShgMemberList: React.FC = () => {
         const formattedData = apiData.shgMember.map((item: any) => ({
           key: item.ID,
           group_name: item.group_name,
-          group_leader:item.group_leader,
+          member_name:item.member_name,
           gender:item.gender,
-          pin:item.pin_code,
-          gram_panchayat:item.gram_panchayat,
+          mobile:item.mobile,
+          animator_name:item.animator_name,
         
           Status: item.status,
         }));
@@ -99,10 +110,10 @@ const ShgMemberList: React.FC = () => {
       sorter: (a, b) => a.group_name.localeCompare(b.group_name),
     },
     {
-      title: "Group Leader",
-      dataIndex: "group_leader",
-      key: "group_leader",
-      sorter: (a, b) => a.group_leader.localeCompare(b.group_leader),
+      title: "Member Name",
+      dataIndex: "member_name",
+      key: "member_name",
+      sorter: (a, b) => a.member_name.localeCompare(b.member_name),
     },
     {
       title: "Gender",
@@ -111,16 +122,16 @@ const ShgMemberList: React.FC = () => {
       sorter: (a, b) => a.gender.localeCompare(b.gender),
     },
     {
-      title: "GramPanchayat",
-      dataIndex: "gram_panchayat",
-      key: "gram_panchayat",
-      sorter: (a, b) => a.gram_panchayat.localeCompare(b.gram_panchayat),
+      title: "Animator Name",
+      dataIndex: "animator_name",
+      key: "animator_name",
+      sorter: (a, b) => a.animator_name.localeCompare(b.animator_name),
     },
     {
-      title: "Pincode",
-      dataIndex: "pin",
-      key: "pin",
-      sorter: (a, b) => a.pin.localeCompare(b.pin),
+      title: "Mobile",
+      dataIndex: "mobile",
+      key: "mobile",
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile),
     },
     {
       title: "Status",
@@ -131,20 +142,24 @@ const ShgMemberList: React.FC = () => {
         <span>{text == "1" ? "Active" : "De-Active"}</span>
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          className="bg-gray-700"
-          onClick={() => handleEditClick(record)}
-        >
-          Edit
-        </Button>
-      ),
-    },
+    ...(hasModifyPermission
+      ? [
+          {
+            title: "Action",
+            key: "action",
+            render: (_: any, record: SHGData) => (
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                className="bg-gray-700"
+                onClick={() => handleEditClick(record)}
+              >
+                Edit
+              </Button>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const handleSearch = () => {
@@ -257,11 +272,13 @@ const exportToExcel = (data: any[]) => {
                 </div>
 
                 {/* Table with dynamic page size */}
-                <Table
+                {hasViewPermission!==null && hasViewPermission?(<>
+                  <Table
                   columns={columns}
                   dataSource={data}
                   pagination={{ pageSize }} // Use dynamic page size
                 />
+                </>):"no access"}
               </div>
             </ConfigProvider>
           </div>

@@ -29,7 +29,7 @@ interface SHGData {
   group_name: string;
   Status: string;
   group_leader:string;
-  total_member:string
+  totalMember:string
 
 }
 
@@ -47,7 +47,18 @@ const ShgGroup: React.FC = () => {
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(5); // Add page size state
+  const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
+  const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'edit_shg_group' && p.active === 1);
+    const viewPermission = permissions.some((p: any) => p.permission_name === 'view_shg_group' && p.active === 1);
+    setHasModifyPermission(modifyPermission);
+    setHasViewPermission(viewPermission);
 
+  
+  }, [hasModifyPermission,hasViewPermission]);
   // Fetch data from API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +74,7 @@ const ShgGroup: React.FC = () => {
           key: item.ID,
           group_name: item.group_name,
           group_leader:item.group_leader,
-          total_member:item.total_member,
+          totalMember:item.totalMember,
           Status: item.status,
         }));
         setData(formattedData);
@@ -100,9 +111,9 @@ const ShgGroup: React.FC = () => {
     },
     {
       title: "Total member",
-      dataIndex: "total_member",
-      key: "total_member",
-      sorter: (a, b) => a.total_member.localeCompare(b.total_member),
+      dataIndex: "totalMember",
+      key: "totalMember",
+      sorter: (a, b) => a.totalMember.localeCompare(b.totalMember),
     },
     {
       title: "Status",
@@ -113,20 +124,24 @@ const ShgGroup: React.FC = () => {
         <span>{text == "1" ? "Active" : "De-Active"}</span>
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          className="bg-gray-700"
-          onClick={() => handleEditClick(record)}
-        >
-          Edit
-        </Button>
-      ),
-    },
+    ...(hasModifyPermission
+      ? [
+          {
+            title: "Action",
+            key: "action",
+            render: (_: any, record: SHGData) => (
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                className="bg-gray-700"
+                onClick={() => handleEditClick(record)}
+              >
+                Edit
+              </Button>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const handleSearch = () => {
@@ -239,11 +254,13 @@ const exportToExcel = (data: any[]) => {
                 </div>
 
                 {/* Table with dynamic page size */}
-                <Table
+                {hasViewPermission!==null && hasViewPermission?(<>
+                  <Table
                   columns={columns}
                   dataSource={data}
                   pagination={{ pageSize }} // Use dynamic page size
                 />
+                </>):"no access"}
               </div>
             </ConfigProvider>
           </div>

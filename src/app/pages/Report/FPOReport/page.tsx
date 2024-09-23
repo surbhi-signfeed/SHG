@@ -1,5 +1,8 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from 'axios'; // Import axios for API calls
+import SecureStorage from 'react-secure-storage'; // Import SecureStorage for token management
 import {
   Table,
   Button,
@@ -17,68 +20,131 @@ import { ColumnsType } from "antd/es/table";
 import Sidebar from "@/app/Component/Sidebar/page";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
+import * as XLSX from 'xlsx';
 import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
 interface SHGData {
+  member_sharholder: any;
+  husband: any;
+  gender: any;
+  no_of_share: any;
+  share_amt: any;
+  land_record: any;
+  monthlySaving: any;
+  fedrationSaving: any;
+  animator: any;
+  mobile: any;
+  totalMember: any;
+  leader: any;
   key: string;
-  shgId: string;
-  groupName: string;
+  name: string;
+  Status: string;
 }
+
 const menuItems = [
-  { key: '10', label: '10' },
+  { key: '5', label: '5' },
   { key: '25', label: '25' },
   { key: '50', label: '50' },
 ];
+
 const FPOReport: React.FC = () => {
-  // Define the menu for Dropdown
-  const menu = {
-    items: menuItems,
-  };
+  const router = useRouter();
+  const [data, setData] = useState<SHGData[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [field, setField] = useState("Name");
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
-  const data: SHGData[] = [
-    { key: "1", shgId: "UJSBAN2023_01", groupName: "SARASWATI SHG KHARKHADA" },
-    { key: "2", shgId: "UJSSHG2022_01", groupName: "VISWASH SHG" },
-    { key: "3", shgId: "UJSSHG2022_02", groupName: "MOUSAM SHG" },
-    { key: "4", shgId: "UJSSHG2022_03", groupName: "SHALU SHG" },
-    { key: "5", shgId: "UJSSHG2022_04", groupName: "MONIKA SHG" },
-    { key: "6", shgId: "UJSSHG2022_05", groupName: "JYOTI SHG" },
-    { key: "7", shgId: "UJSSHG2022_06", groupName: "MADHU SHG" },
-  ];
+  const [pageSize, setPageSize] = useState(5); // Add page size state
+
+  // Fetch data from API when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = SecureStorage.getItem('accessToken');
+        const response = await axios.get('http://localhost:4000/ujs/ListShgFpo', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const apiData = response.data;
+        const formattedData = apiData.Fpo.map((item: any) => ({
+          key: item.id,
+          member_sharholder: item.member_sharholder,
+          husband: item.husband_name,
+          village: item.village_name,
+          gender:item.gender,
+          share_amt:item.share_amt,
+          mobile: item.mobile,
+          no_of_share: item.no_of_share,
+          land_record: item.land_record,
+        }));
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
+
+  // Handle page size change from dropdown
+  const handleMenuClick = (e: any) => {
+    const newSize = parseInt(e.key, 10); // Convert key to number
+    setPageSize(newSize); // Update page size state
+  };
 
   const columns: ColumnsType<SHGData> = [
     {
-      title: "SHG Group ID",
-      dataIndex: "shgId",
-      key: "shgId",
+      title: "Member Sharholder",
+      dataIndex: "member_sharholder",
+      key: "member_sharholder",
+      sorter: (a, b) => a.member_sharholder.localeCompare(b.member_sharholder),
     },
     {
-      title: "Group Name",
-      dataIndex: "groupName",
-      key: "groupName",
+      title: "Husband Name",
+      dataIndex: "husband",
+      key: "husband",
+      sorter: (a, b) => a.husband.localeCompare(b.husband),
     },
     {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button type="primary" icon={<EditOutlined />} className="bg-gray-700">
-          Edit
-        </Button>
-      ),
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      sorter: (a, b) => a.gender.localeCompare(b.gender),
     },
+    {
+      title: "Mobile",
+      dataIndex: "mobile",
+      key: "mobile",
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile),
+    },{
+      title: "Share Amount",
+      dataIndex: "no_of_share",
+      key: "no_of_share",
+      sorter: (a, b) => a.no_of_share.localeCompare(b.no_of_share),
+    },
+    {
+      title: "Share Amount",
+      dataIndex: "share_amt",
+      key: "share_amt",
+      sorter: (a, b) => a.share_amt.localeCompare(b.share_amt),
+    },
+    {
+      title: "Land Record",
+      dataIndex: "land_record",
+      key: "land_record",
+      sorter: (a, b) => a.land_record.localeCompare(b.land_record),
+    }
+  
   ];
 
   const handleSearch = () => {
     console.log("Searching for:", searchValue);
   };
 
-  const handleExport = () => {
-    console.log("Exporting XLSX...");
-  };
-  // Custom search input
   const searchInput = (
     <Input
       placeholder="Search"
@@ -88,121 +154,107 @@ const FPOReport: React.FC = () => {
       suffix={<IoMdSearch />}
     />
   );
+
+  const menu = (
+    <Menu onClick={handleMenuClick} items={menuItems} /> // Add onClick handler
+  );
+// download excel file
+const exportToExcel = (data: any[]) => {
+  if (data.length === 0) return; // Ensure there is data to export
+
+  // Create a new workbook
+  const workbook = XLSX.utils.book_new();
+
+  // Extract headers dynamically from the first item in the data array
+  const headers = Object.keys(data[0]);
+
+  // Create a worksheet using the data array directly
+  const worksheetData = data.map(item => {
+      const row: any = {};
+      headers.forEach(header => {
+          row[header] = item[header];
+      });
+      return row;
+  });
+
+  // Convert to worksheet
+  const worksheet = XLSX.utils.json_to_sheet(worksheetData, { header: headers });
+
+  // Add the worksheet to the workbook
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'FPOReport');
+
+  // Create an Excel file and trigger the download when user clicks the button
+  XLSX.writeFile(workbook, 'FPOReport.xlsx');
+};
   return (
     <>
       <TopNavbar />
 
       <div className="flex bg-gray-100">
-        {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">
           <Sidebar />
         </div>
 
-        {/* Main Content */}
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
           <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw] lg:mt-4">
-            FPO Report
+          FPO Report
           </h2>
 
           <div className="w-full">
-            <ConfigProvider
-              theme={{
-                algorithm: theme.defaultAlgorithm,
-              }}
-            >
+            <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
               <div>
-              {/* laptop */}
-               <Row justify="space-between" align="middle" style={{ marginBottom: 16 }} className="hidden lg:flex p-3">
-        <Col>
-          <Space>
-            {/* Field Dropdown */}
-            <Select defaultValue={field} onChange={(value) => setField(value)} style={{ width: 120 }}>
-              <Option value="Name">Name</Option>
-              <Option value="ID">ID</Option>
-            </Select>
+                {/* laptop view */}
+                <Row justify="space-between" align="middle" style={{ marginBottom: 16 }} className="hidden lg:flex p-3">
+                  <Col>
+                    <Space>
+                      <Select defaultValue={field} onChange={(value) => setField(value)} style={{ width: 120 }}>
+                        <Option value="Name">Name</Option>
+                        <Option value="ID">ID</Option>
+                      </Select>
 
-            {/* Type Dropdown */}
-            <Select defaultValue={type} onChange={(value) => setType(value)} style={{ width: 120 }}>
-              <Option value="like">like</Option>
-              <Option value="equal">equal</Option>
-              <Option value="not equal">not equal</Option>
-            </Select>
+                      <Select defaultValue={type} onChange={(value) => setType(value)} style={{ width: 120 }}>
+                        <Option value="like">like</Option>
+                        <Option value="equal">equal</Option>
+                        <Option value="not equal">not equal</Option>
+                      </Select>
 
-            {/* Value Search Input */}
-            <Input 
-              placeholder="Search..." 
-              value={searchValue} 
-              onChange={(e) => setSearchValue(e.target.value)} 
-              style={{ width: 200 }} 
-            />
+                      <Input
+                        placeholder="Search..."
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        style={{ width: 200 }}
+                      />
 
-            {/* Go Button */}
-            <Button type="primary" onClick={handleSearch} className='bg-gray-700'>Go</Button>
-          </Space>
-        </Col>
+                      <Button type="primary" onClick={handleSearch} className="bg-gray-700">Go</Button>
+                    </Space>
+                  </Col>
 
-        {/* Export XLSX Button */}
-        <Col>
-          <Button type="default" onClick={handleExport} className='bg-gray-700 text-white'>Export XLSX</Button>
-        </Col>
-      </Row>
-              {/* mobile */}
-               <div className=" lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4 p-3">
-        {/* Left section for dropdowns and search input */}
-        <div className="space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row">
-          {/* Field Dropdown */}
-          <Select defaultValue={field} onChange={(value) => setField(value)} className="w-full md:w-32">
-            <Option value="Name">Name</Option>
-            <Option value="ID">ID</Option>
-          </Select>
+                  <Col>
+                    <Button type="default" onClick={() => exportToExcel(data)} className="bg-gray-700 text-white">
+                      Export XLSX
+                    </Button>
+                  </Col>
+                </Row>
 
-          {/* Type Dropdown */}
-          <Select defaultValue={type} onChange={(value) => setType(value)} className="w-full md:w-32">
-            <Option value="like">like</Option>
-            <Option value="equal">equal</Option>
-            <Option value="not equal">not equal</Option>
-          </Select>
-
-          {/* Value Search Input */}
-          <Input
-            placeholder="Search..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full md:w-64"
-          />
-
-          {/* Go Button */}
-          <Button type="primary" onClick={handleSearch} className="bg-gray-700 text-white">Go</Button>
-        </div>
-
-        {/* Export XLSX Button */}
-        <div className="flex justify-end md:justify-start">
-          <Button type="default" onClick={handleExport} className="bg-gray-700 text-white">
-            Export XLSX
-          </Button>
-        </div>
-      </div>
-
-                {/* Controls Row */}
+                {/* Show Entries Dropdown */}
                 <div className="flex justify-between items-center my-4 px-4">
-                  {/* Left: Show Entries Dropdown */}
                   <div className="flex items-center space-x-2">
-                    <span>show entries:</span>
-                     <Dropdown menu={menu}>
-        <Button>
-          10 <MdKeyboardArrowDown />
-        </Button>
-      </Dropdown>
+                    <span>Show entries:</span>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                      <Button>
+                        {pageSize} <MdKeyboardArrowDown />
+                      </Button>
+                    </Dropdown>
                   </div>
 
-                  {/* Right: Search Input */}
                   <div className="flex items-center">{searchInput}</div>
                 </div>
-                {/* Table */}
+
+                {/* Table with dynamic page size */}
                 <Table
                   columns={columns}
                   dataSource={data}
-                  pagination={{ pageSize: 10 }}
+                  pagination={{ pageSize }} // Use dynamic page size
                 />
               </div>
             </ConfigProvider>
@@ -214,3 +266,4 @@ const FPOReport: React.FC = () => {
 };
 
 export default FPOReport;
+

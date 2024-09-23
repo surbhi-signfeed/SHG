@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Checkbox, Select,DatePicker} from 'antd';
 import TopNavbar from '@/app/Component/Topnavbar/page';
 import Sidebar from '@/app/Component/Sidebar/page';
@@ -12,7 +12,18 @@ const { Option } = Select;
 
 const CreateShgMember: React.FC = () => {
   const [form] = Form.useForm();
+  const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
 
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'create_department' && p.active === 1);
+  
+    setHasCreatePermission(modifyPermission);
+  
+
+  
+  }, [hasCreatePermission]);
   // Function to handle form submission
   const onFinish = async (values: any) => {
     try {
@@ -109,7 +120,7 @@ const CreateShgMember: React.FC = () => {
       <div className="lg:w-1/4 h-screen">
         <Sidebar />
       </div>
-
+      {hasCreatePermission !== null && hasCreatePermission ?(<>
       {/* Main Content */}
       <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
        
@@ -268,6 +279,7 @@ const CreateShgMember: React.FC = () => {
     </div>
        
       </div>
+      </>):" You Don't have access to create department"}
     </div>
    </>
   );

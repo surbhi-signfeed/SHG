@@ -1,15 +1,51 @@
 'use client'
-import React from "react";
+import React, { useState ,useEffect} from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import Sidebar from "@/app/Component/Sidebar/page";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { IoMdCard } from "react-icons/io";
+import secureLocalStorage from "react-secure-storage";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 const Dashboard = () => {
+const id=secureLocalStorage.getItem('id')
+const token =secureLocalStorage.getItem('accessToken')
+console.log('id',id,token)
+const[data,setData]=useState([])
+const fetchData2 = async () => {
+  try {
+    const response = await fetch(
+      `http://localhost:4000/ujs/ListRolePermission/${id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Checking if the response is okay
+    if (!response.ok) {
+      console.error(`Error fetching data: ${response.status} - ${response.statusText}`);
+      return;
+    }
+
+    const result = await response.json();
+   // Store the data as a string in localStorage
+   localStorage.setItem("permission", JSON.stringify(result.data[0].permissions));
+    setData(result);
+    sessionStorage.setItem("Permission", JSON.stringify(result));
+  } catch (error) {
+    console.error("Network or server error:", error);
+  }
+};
+
+useEffect(() => {
+  fetchData2();
+}, []);
   return (
     <>
       <TopNavbar />
-
       <div className="flex font-customRoboto">
         {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">

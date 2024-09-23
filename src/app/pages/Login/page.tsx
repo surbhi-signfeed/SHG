@@ -23,11 +23,11 @@ const Login = () => {
 
       // Extract token from response
       console.log("token",response)
-      const { accessToken } = response.data;
+      const { accessToken ,role} = response.data;
 
       // Store token in secure storage
       SecureStorage .setItem('accessToken', accessToken);
-
+      SecureStorage .setItem('id', role);
       // Set login success state
       setIsLoggedIn(true);
 

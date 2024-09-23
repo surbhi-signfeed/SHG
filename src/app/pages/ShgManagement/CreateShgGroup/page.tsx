@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Checkbox, Select,DatePicker} from 'antd';
 import TopNavbar from '@/app/Component/Topnavbar/page';
 import Sidebar from '@/app/Component/Sidebar/page';
@@ -13,7 +13,18 @@ const { Option } = Select;
 
 const CreateShgGroup: React.FC = () => {
   const [form] = Form.useForm();
+  const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
 
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'create_department' && p.active === 1);
+  
+    setHasCreatePermission(modifyPermission);
+  
+
+  
+  }, [hasCreatePermission]);
   // Function to handle form submission
   const onFinish = async (values: any) => {
     try {
@@ -93,7 +104,7 @@ const CreateShgGroup: React.FC = () => {
 
       {/* Main Content */}
       <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
-       
+      {hasCreatePermission !== null && hasCreatePermission ?(<>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
       <h2 className="text-xl font-semibold mb-4 lg:ml-[0px]">Create SHG Group</h2>
       <Form form={form} name="create-shg-group" onFinish={onFinish} layout="vertical" className="space-y-6">
@@ -168,6 +179,7 @@ const CreateShgGroup: React.FC = () => {
         </div>
       </Form>
     </div>
+    </>):" You Don't have access to create department"}
        
       </div>
     </div>

@@ -21,6 +21,7 @@ import Sidebar from "@/app/Component/Sidebar/page";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import * as XLSX from 'xlsx';
+import secureLocalStorage from "react-secure-storage";
 import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
@@ -44,8 +45,22 @@ const ListDepartments: React.FC = () => {
   const [type, setType] = useState("like");
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(5); // Add page size state
+  const [hasModifyPermission, setHasModifyPermission] = useState<boolean | null>(null); // Set initial value to null
+  const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_department' && p.active === 1);
+    const viewPermission = permissions.some((p: any) => p.permission_name === 'view_department' && p.active === 1);
+    setHasModifyPermission(modifyPermission);
+    setHasViewPermission(viewPermission);
 
-  // Fetch data from API when the component mounts
+  
+  }, [hasModifyPermission,hasViewPermission]);
+
+ 
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,20 +111,25 @@ const ListDepartments: React.FC = () => {
         <span>{text == "1" ? "Active" : "De-Active"}</span>
       ),
     },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          className="bg-gray-700"
-          onClick={() => handleEditClick(record)}
-        >
-          Edit
-        </Button>
-      ),
-    },
+    ...(hasModifyPermission
+      ? [
+          {
+            title: "Action",
+            key: "action",
+            render: (_: any, record: SHGData) => (
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                className="bg-gray-700"
+                onClick={() => handleEditClick(record)}
+              >
+                Edit
+              </Button>
+            ),
+          },
+        ]
+      : []), // If no permission, omit the column entirely
+  
   ];
 
   const handleSearch = () => {
@@ -222,11 +242,13 @@ const exportToExcel = (data: any[]) => {
                 </div>
 
                 {/* Table with dynamic page size */}
-                <Table
+                {hasViewPermission!==null && hasViewPermission?(<>
+                  <Table
                   columns={columns}
                   dataSource={data}
                   pagination={{ pageSize }} // Use dynamic page size
                 />
+                </>):"no access"}
               </div>
             </ConfigProvider>
           </div>
