@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import axios from 'axios'; // Import axios for API calls
 import SecureStorage from 'react-secure-storage'; // Import react-secure-storage
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login success
   const router = useRouter(); // Initialize useRouter
 
   // Function to handle login
@@ -20,55 +20,49 @@ const Login = () => {
         email,
         password,
       });
-
+      if (response.data.status === 200) {
+        toast.success('Login Sussessfully!');
+       
+      } else {
+        // If the response indicates failure, show the error message
+        toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
+      }
       // Extract token and role from response
       const { accessToken, role } = response.data;
-
-      // Store token and role in secure storage
       SecureStorage.setItem('accessToken', accessToken);
       SecureStorage.setItem('id', role);
-
-      // Set login success state
-      setIsLoggedIn(true);
-
-      // Set a timeout to remove the token after 1 minute
       setTimeout(() => {
         SecureStorage.removeItem('accessToken');
         SecureStorage.removeItem('id');
-        setIsLoggedIn(false); // Update state to reflect the user is logged out
+        SecureStorage.removeItem('permission');
         router.push('/'); // Redirect to login page
-      }, 3000000); // 1 minute (60000 milliseconds)
+      }, 30*60*1000); // 1 minute (60000 milliseconds)
 
       // Redirect to dashboard
       router.push("/pages/Dashboard");
-    } catch (error) {
-      console.error('Login failed:', error);
-      // Handle login failure (e.g., show an error message)
+    }catch (error: any) {
+      console.error("Error submitting form:", error);
+
+      // Check if the error has a response (server error)
+      if (error.response && error.response.data) {
+        toast.error(`Error: ${error.response.data.message || 'Request failed!'}`);
+      } else {
+        // Handle other errors (e.g., network issues)
+        toast.error('An error occurred while submitting the form.');
+      }
     }
   };
 
-  const handleBack = () => {
-    router.back(); // Navigate back to the previous page
-  };
 
-  // Effect to check for token on component mount
-  useEffect(() => {
-    const token = SecureStorage.getItem('accessToken');
-    if (!token) {
-      setIsLoggedIn(false); // If no token, set logged-in state to false
-    }
-  }, []);
-
-  return (
+  return (<>
+    <ToastContainer/>
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
         <div className="text-center mb-6">
           <img src="../img/ujslogo.png" alt="Logo" className="mx-auto h-10 mb-2" />
           <h1 className="text-xl font-semibold">Sign In</h1>
         </div>
-        {isLoggedIn ? (
-          <p className="text-green-500 font-bold text-center mb-4">Login successful!</p>
-        ) : (
+       
           <form onSubmit={handleLogin}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm mb-2" htmlFor="email">
@@ -105,16 +99,10 @@ const Login = () => {
               LOGIN NOW
             </button>
           </form>
-        )}
-        <button
-          type="button"
-          onClick={handleBack}
-          className="mt-4 w-full py-2 bg-white text-black font-bold rounded-md transition"
-        >
-          BACK NOW
-        </button>
+    
+       
       </div>
-    </div>
+    </div></>
   );
 };
 

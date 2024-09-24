@@ -66,14 +66,28 @@ const CreateDepartments: React.FC = () => {
         }
       });
 
-     // Handle successful response
-     console.log("Form Submitted Successfully:", response.data);
-     form.resetFields(); // Optionally reset the form fields
-     toast.success('Form submitted successfully!');
-   } catch (error) {
-     console.error("Error submitting form:", error);
+    
+    // Handle response
+     
+    if (response.data.status === 200) {
+      toast.success('Form submitted successfully!');
+      form.resetFields(); // Optionally reset the form fields
+    } else {
+      // If the response indicates failure, show the error message
+      toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
+    }
+   } 
+   catch (error: any) {
+    console.error("Error submitting form:", error);
 
-   }
+    // Check if the error has a response (server error)
+    if (error.response && error.response.data) {
+      toast.error(`Error: ${error.response.data.message || 'Request failed!'}`);
+    } else {
+      // Handle other errors (e.g., network issues)
+      toast.error('An error occurred while submitting the form.');
+    }
+  }
   };
 
   // Function to handle form reset
@@ -108,12 +122,14 @@ const CreateDepartments: React.FC = () => {
               initialValues={{ status: "Active" }} // Set default value for status
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Form.Item name="department_name" className="text-gray-600" label="Department Name">
+                <Form.Item name="department_name" className="text-gray-600" label="Department Name"  rules={[{ required: true, message: 'Please input the department name!' }]}>
                   <Input placeholder="Enter Department Name" />
                 </Form.Item>
 
-                <Form.Item name="status" label="Status">
-                  <Select>
+                <Form.Item name="status" label="Status"  rules={[{ required: true, message: 'Please select status!' }]}>
+                
+                <Select defaultValue="Status">
+                  <Option value=""  >Status</Option>
                     <Option value="Active">Active</Option>
                     <Option value="Inactive">Inactive</Option>
                   </Select>

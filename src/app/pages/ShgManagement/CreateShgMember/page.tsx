@@ -6,6 +6,7 @@ import TopNavbar from '@/app/Component/Topnavbar/page';
 import Sidebar from '@/app/Component/Sidebar/page';
 import moment from 'moment';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import SecureStorage from 'react-secure-storage';
 import { useRouter } from 'next/navigation';
@@ -21,7 +22,7 @@ interface SHGData {
 }
 const CreateShgMember: React.FC = () => {
   const [form] = Form.useForm();
-  const router=useRouter();
+  const router = useRouter();
   const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
   const [data, setData] = useState<SHGData[]>([]);
   const [stateData, setStateData] = useState<any[]>([]);
@@ -31,9 +32,9 @@ const CreateShgMember: React.FC = () => {
     if (!token) {
       router.push("/"); // Redirect to login page if token is not present
     } else {
-    
+
     }
-  }, []); 
+  }, []);
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol", permissions)
@@ -97,7 +98,7 @@ const CreateShgMember: React.FC = () => {
     };
     fetchData();
   }, []);
-  console.log("State", stateData)
+
   // Function to handle form submission
   const onFinish = async (values: any) => {
     try {
@@ -113,12 +114,10 @@ const CreateShgMember: React.FC = () => {
         console.error("No token found");
         return;
       }
-
       // Prepare the data to be sent
+
       const requestData = {
-        id: parseInt(values.shgId, 10), // Assuming this is an ID field and not optional
-        row_arrangement: values.rowArrangement, // Assuming it's provided in the form
-        shg_id: values.shgId || '', // SHG ID
+
         member_name: values.memberName || '', // Member Name
         member_name_eng: values.memberNameEng || '', // Member Name (English)
         group_name: values.groupName || '', // Group Name
@@ -163,13 +162,7 @@ const CreateShgMember: React.FC = () => {
         fedrationSaving: values.totalFederationSaving ? parseInt(values.totalFederationSaving, 10) : 0, // Total Federation Saving
         openingBal: values.openingBal ? parseInt(values.openingBal, 10) : 0, // Opening Balance
         fix_loan: values.fixLoan ? parseInt(values.fixLoan, 10) : 0, // Fixed Loan
-      };
-      
-
-
-      // Log request data
-      console.log("Request Data:", requestData);
-
+      }
       // Make POST request to API
       const response = await axios.post('http://localhost:4000/ujs/AddShgMember', requestData, {
         headers: {
@@ -177,18 +170,28 @@ const CreateShgMember: React.FC = () => {
         }
       });
 
-      // Handle successful response
-      console.log("Form Submitted Successfully:", response.data);
-      form.resetFields(); // Optionally reset the form fields
-      toast.success('Form submitted successfully!');
+      // Handle response
 
-    } catch (error) {
+      if (response.data.status === 200) {
+        toast.success('Form submitted successfully!');
+        form.resetFields(); // Optionally reset the form fields
+      } else {
+        // If the response indicates failure, show the error message
+        toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
+      }
+
+    } catch (error: any) {
       console.error("Error submitting form:", error);
-      toast.error('Failed to submit the form. Please try again.');
 
+      // Check if the error has a response (server error)
+      if (error.response && error.response.data) {
+        toast.error(`Error: ${error.response.data.message || 'Request failed!'}`);
+      } else {
+        // Handle other errors (e.g., network issues)
+        toast.error('An error occurred while submitting the form.');
+      }
     }
   };
-
   // Function to handle form reset
   const onReset = () => {
     form.resetFields();
@@ -197,7 +200,7 @@ const CreateShgMember: React.FC = () => {
   return (
     <>
       <TopNavbar />
-
+      <ToastContainer />
       <div className="flex bg-gray-100">
         {/* Sidebar - fixed width */}
         <div className="lg:w-1/4 h-screen">
@@ -211,11 +214,10 @@ const CreateShgMember: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4 lg:ml-[0px]">Create SHG Member</h2>
               <Form form={form} name="create-shg-group" onFinish={onFinish} layout="vertical" className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                  {/* Each of these is a Form.Item with an Input or other component */}
-                  {/* Row 1 */}
-                  <Form.Item name="shgId" label="Shg id">
-                    <Input placeholder="Shg Id" />
-                  </Form.Item>
+
+                  {/* Existing Fields */}
+
+
                   <Form.Item name="groupName" label="Group Name">
                     <Select placeholder="Select Group">
                       {data.map((item: any) => (
@@ -225,17 +227,19 @@ const CreateShgMember: React.FC = () => {
                       ))}
                     </Select>
                   </Form.Item>
-                  <Form.Item name="memberName" label="Member Name">
-                    <Input placeholder="Member Name" />
-                  </Form.Item>
-                  <Form.Item name="leaderName" label="Leader Name">
-                    <Input placeholder="Leader Name" />
+
+                  <Form.Item name="memberName" label="Member Name" rules={[{ required: true, message: 'Please Enter Member Name!' }]}>
+                    <Input placeholder="Member Name" type="text" />
                   </Form.Item>
 
-                  {/* Row 2 */}
-                  <Form.Item name="husbandFatherName" label="Husband/Father Name">
-                    <Input placeholder="Husband/Father Name" />
+                  <Form.Item name="leaderName" label="Leader Name">
+                    <Input placeholder="Leader Name" type="text" />
                   </Form.Item>
+
+                  <Form.Item name="husbandFatherName" label="Husband/Father Name">
+                    <Input placeholder="Husband/Father Name" type="text" />
+                  </Form.Item>
+
                   <Form.Item name="stateName" label="State Name">
                     <Select placeholder="Select state">
                       {stateData.map((item: any) => (
@@ -245,93 +249,112 @@ const CreateShgMember: React.FC = () => {
                       ))}
                     </Select>
                   </Form.Item>
+
                   <Form.Item name="districtName" label="District Name">
-                    <Input placeholder="District Name" />
+                    <Input placeholder="District Name" type="text" />
                   </Form.Item>
+
                   <Form.Item name="villageName" label="Village Name">
-                    <Input placeholder="Village Name" />
+                    <Input placeholder="Village Name" type="text" />
                   </Form.Item>
+
                   <Form.Item name="blockTaluka" label="Block Taluka">
-                    <Input placeholder="Block Taluka" />
+                    <Input placeholder="Block Taluka" type="text" />
                   </Form.Item>
+
                   <Form.Item name="grampanchayat" label="Gram Panchayat">
-                    <Input placeholder="Gram Panchayat" />
+                    <Input placeholder="Gram Panchayat" type="text" />
                   </Form.Item>
+
                   <Form.Item name="pinCode" label="Pin Code">
-                    <Input placeholder="Pin Code" />
+                    <Input placeholder="Pin Code" type="number" />
                   </Form.Item>
 
                   <Form.Item name="gender" label="Gender">
-                    <Select placeholder="Select status">
+                    <Select placeholder="Select gender">
                       <Option value="Female">Female</Option>
                       <Option value="Male">Male</Option>
                     </Select>
                   </Form.Item>
-                  {/* Row 3 */}
 
                   <Form.Item name="mobile" label="Mobile">
-                    <Input placeholder="Mobile" />
+                    <Input placeholder="Mobile" type="tel" />
                   </Form.Item>
-                  <Form.Item name="whatsapp" label="What's App">
-                    <Input placeholder="What's App" />
+
+                  <Form.Item name="whatsapp" label="WhatsApp">
+                    <Input placeholder="WhatsApp" type="tel" />
                   </Form.Item>
+
                   <Form.Item name="email" label="Email">
-                    <Input placeholder="Email" />
+                    <Input placeholder="Email" type="email" />
                   </Form.Item>
+
                   <Form.Item name="dob" label="DOB">
                     <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
                   </Form.Item>
+
                   <Form.Item name="aadharNo" label="Aadhar No">
-                    <Input placeholder="Aadhar No" />
+                    <Input placeholder="Aadhar No" type="number" />
                   </Form.Item>
+
                   <Form.Item name="education" label="Education">
-                    <Input placeholder="Education" />
+                    <Input placeholder="Education" type="text" />
                   </Form.Item>
+
                   <Form.Item name="primaryOccupation" label="Primary Occupation">
-                    <Input placeholder="Primary Occupation" />
+                    <Input placeholder="Primary Occupation" type="text" />
                   </Form.Item>
 
                   <Form.Item name="religion" label="Religion">
-                    <Input placeholder="Religion" />
+                    <Input placeholder="Religion" type="text" />
                   </Form.Item>
 
-                  {/* Row 4 */}
                   <Form.Item name="houseNo" label="House No">
-                    <Input placeholder="House No" />
+                    <Input placeholder="House No" type="text" />
                   </Form.Item>
+
                   <Form.Item name="bankName" label="Bank Name">
-                    <Input placeholder="Bank Name" />
+                    <Input placeholder="Bank Name" type="text" />
                   </Form.Item>
+
                   <Form.Item name="bankBranch" label="Bank Branch">
-                    <Input placeholder="Bank Branch" />
+                    <Input placeholder="Bank Branch" type="text" />
                   </Form.Item>
+
                   <Form.Item name="bankAC" label="Bank AC">
-                    <Input placeholder="Bank AC" />
+                    <Input placeholder="Bank AC" type="text" />
                   </Form.Item>
+
                   <Form.Item name="bankIFSC" label="Bank IFSC">
-                    <Input placeholder="Bank IFSC" />
+                    <Input placeholder="Bank IFSC" type="text" />
                   </Form.Item>
+
                   <Form.Item name="aadharSeedingStatus" label="Aadhar Seeding Status">
-                    <Input placeholder="Aadhar Seeding Status" />
+                    <Input placeholder="Aadhar Seeding Status" type="text" />
                   </Form.Item>
+
                   <Form.Item name="voterNum" label="Voter Num">
-                    <Input placeholder="Voter Num" />
+                    <Input placeholder="Voter Num" type="text" />
                   </Form.Item>
+
                   <Form.Item name="mnregaNum" label="MNREGA Num">
-                    <Input placeholder="MNREGA Num" />
+                    <Input placeholder="MNREGA Num" type="text" />
                   </Form.Item>
+
                   <Form.Item name="category" label="Category">
-                    <Input placeholder="Category" />
+                    <Input placeholder="Category" type="text" />
                   </Form.Item>
+
                   <Form.Item name="loanTaken" label="Loan Taken">
-                    <Input placeholder="Loan Taken" />
+                    <Input placeholder="Loan Taken" type="text" />
                   </Form.Item>
+
                   <Form.Item name="mfiBankLoan" label="MFI Bank Loan">
-                    <Input placeholder="MFI Bank Loan" />
+                    <Input placeholder="MFI Bank Loan" type="text" />
                   </Form.Item>
 
                   <Form.Item name="annualIncome" label="Annual Income">
-                    <Input placeholder="Annual Income" />
+                    <Input placeholder="Annual Income" type="number" />
                   </Form.Item>
 
                   <Form.Item name="differentlyAbled" label="Differently Abled">
@@ -342,35 +365,44 @@ const CreateShgMember: React.FC = () => {
                   </Form.Item>
 
                   <Form.Item name="totalHouseholdMember" label="Total Household Member">
-                    <Input placeholder="Total Household Member" />
+                    <Input placeholder="Total Household Member" type="number" />
                   </Form.Item>
+
                   <Form.Item name="totalMonthlySaving" label="Total Monthly Saving">
-                    <Input placeholder="Total Monthly Saving" />
+                    <Input placeholder="Total Monthly Saving" type="number" />
                   </Form.Item>
-
-                  {/* Row 9 */}
-
 
                   <Form.Item name="totalFederationSaving" label="Total Federation Saving">
-                    <Input placeholder="Total Federation Saving" />
+                    <Input placeholder="Total Federation Saving" type="number" />
                   </Form.Item>
-                  <Form.Item name="status" label="Status">
+
+                  <Form.Item name="status" label="Status" rules={[{ required: true, message: 'Please Select Status!' }]}>
                     <Select placeholder="Select status">
                       <Option value="active">Active</Option>
                       <Option value="inactive">Inactive</Option>
                     </Select>
                   </Form.Item>
+
+                  <Form.Item name="openingBal" label="Opening Balance" rules={[{ required: true, message: 'Please Enter Balance' }]}>
+                    <Input placeholder="Opening Balance" type="number" />
+                  </Form.Item>
+
+                  <Form.Item name="fixLoan" label="Fix Loan" rules={[{ required: true, message: 'Please Enter fixloan' }]}>
+                    <Input placeholder="Fix Loan" type="number" />
+                  </Form.Item>
+
                 </div>
 
                 <div className="flex justify-between mt-6">
-                  <Button type="primary" htmlType="submit" className='bg-gray-900 text-white'>
+                  <Button type="primary" htmlType="submit" className="bg-gray-900 text-white">
                     Save
                   </Button>
-                  <Button type="default" onClick={onReset} className='bg-gray-900 text-white'>
+                  <Button type="default" onClick={onReset} className="bg-gray-900 text-white">
                     Clear
                   </Button>
                 </div>
               </Form>
+
             </div>
 
           </div>

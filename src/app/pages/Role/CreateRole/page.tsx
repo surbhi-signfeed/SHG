@@ -40,54 +40,68 @@ const CreateRole: React.FC = () => {
     try {
       // Log form values
       console.log("Form Values:", values);
-
+  
       // Convert 'Active' to true and 'Inactive' to false
-      const status = values.status === "Active"; // Converts 'Active' to true, 'Inactive' to false
-
+      const status = values.status === "Active";
+  
       // Retrieve the token from SecureStorage
       const token = SecureStorage.getItem('accessToken');
       if (!token) {
         console.error("No token found");
+        toast.error('No token found! Please log in.');
         return;
       }
-
+  
       // Prepare the permissions array from checkbox values
       const permissions = [];
       for (const key in values) {
-        if (values[key] === true) { // if the checkbox is checked
+        if (values[key] === true) {
           permissions.push({
-            permission_name: key, // Permission name comes from the checkbox key
-            active: true // Mark active if checked
+            permission_name: key,
+            active: true
           });
         }
       }
-
+  
       // Prepare the data to be sent
       const requestData = {
         role_name: values.role_name,
         status: status,
         permissions: permissions,
       };
-
-      // Log request data
-      console.log("Request Data:", requestData);
-
+  
+     
+  
       // Make POST request to API
       const response = await axios.post('http://localhost:4000/ujs/AddRole', requestData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
       });
-
-      // Handle successful response
-      console.log("Form Submitted Successfully:", response.data);
-      form.resetFields(); // Optionally reset the form fields
-      toast.success('Form submitted successfully!');
-    } catch (error) {
+  
+      // Handle response
+     
+      if (response.data.status === 200) {
+        toast.success('Form submitted successfully!');
+        form.resetFields(); // Optionally reset the form fields
+      } else {
+        // If the response indicates failure, show the error message
+        toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
+      }
+    } 
+    catch (error: any) {
       console.error("Error submitting form:", error);
+  
+      // Check if the error has a response (server error)
+      if (error.response && error.response.data) {
+        toast.error(`Error: ${error.response.data.message || 'Request failed!'}`);
+      } else {
+        // Handle other errors (e.g., network issues)
+        toast.error('An error occurred while submitting the form.');
+      }
     }
   };
-
+  
   // Function to handle form reset
   const onReset = () => {
     form.resetFields();
@@ -115,13 +129,16 @@ const CreateRole: React.FC = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <Form.Item name="role_name" className='text-gray-600' label="Role Name">
+                <Form.Item name="role_name" className='text-gray-600' label="Role Name"   rules={[{ required: true, message: 'Please input the role name!' }]}
+                >
                   <Input placeholder="Enter Role Name" />
                 </Form.Item>
 
                   
-                <Form.Item name="status" label="status">
-                  <Select defaultValue="Active">
+                <Form.Item name="status" label="Status"   rules={[{ required: true, message: 'Please Select the status!' }]}
+                >
+                  <Select defaultValue="Status">
+                  <Option value="" >Status</Option>
                     <Option value="Active">Active</Option>
                     <Option value="Inactive">Inactive</Option>
                   </Select>
