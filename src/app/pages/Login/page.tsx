@@ -56,7 +56,7 @@ const Login = () => {
 
   return (<>
     <ToastContainer/>
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100" style={{background:"url('../img/BACKGROUND.png')",backgroundRepeat:"no-repeat"}}>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
         <div className="text-center mb-6">
           <img src="../img/ujslogo.png" alt="Logo" className="mx-auto h-10 mb-2" />

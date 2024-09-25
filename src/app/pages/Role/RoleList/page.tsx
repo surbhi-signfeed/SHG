@@ -110,7 +110,7 @@ const ListRole: React.FC = () => {
         });
         const apiData = response.data;
         const formattedData = apiData.shgRole.map((item: any) => ({
-          key: item.ID,
+          key: item.roll_id,
           name: item.role_name,
           permissions: item.permissions,
           Status: item.active,
@@ -137,7 +137,7 @@ const ListRole: React.FC = () => {
   }, [searchText, originalData]); 
  
   const handleEditClick = (record: SHGData) => {
-    router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
+    router.push(`/pages/Role/UpdateRole?id=${record.key}`);
   };
 
 
@@ -248,7 +248,7 @@ const ListRole: React.FC = () => {
 
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
           <h2 className="text-black text-[16px] ml-[10vw] lg:ml-[6vw] xl:ml-[2vw] lg:mt-4">
-            Department List
+            Role List
           </h2>
 
           <div className="w-full">

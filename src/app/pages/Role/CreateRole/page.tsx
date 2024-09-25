@@ -188,7 +188,7 @@ const CreateRole: React.FC = () => {
             <Form.Item name="user_create" valuePropName="checked">
                 <Checkbox>Create</Checkbox>
               </Form.Item>
-             <Form.Item name="role_modify" valuePropName="checked">
+             <Form.Item name="user_modify" valuePropName="checked">
                 <Checkbox>Modify</Checkbox>
               </Form.Item>
               <Form.Item name="user_view" valuePropName="checked">
