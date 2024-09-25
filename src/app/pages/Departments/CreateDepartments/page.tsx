@@ -7,8 +7,8 @@ import Sidebar from "@/app/Component/Sidebar/page";
 import axios from 'axios'; // Import Axios
 import SecureStorage from 'react-secure-storage'; // Import SecureStorage
 import { toast, ToastContainer } from 'react-toastify';
-import { useRouter } from "next/navigation";
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation";
 const { Option } = Select;
 
 const CreateDepartments: React.FC = () => {

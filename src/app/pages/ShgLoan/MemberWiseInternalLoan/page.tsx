@@ -56,7 +56,7 @@ const MemberWiseInternalLoan: React.FC = () => {
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value 
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
-    console.log("ol", permissions)
+    
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_department' && p.active === 1);
     const viewPermission = permissions.some((p: any) => p.permission_name === 'view_department' && p.active === 1);
     setHasModifyPermission(modifyPermission);
@@ -297,7 +297,7 @@ const MemberWiseInternalLoan: React.FC = () => {
                   </Col>
 
                   <Col>
-                    <Button onClick={() => exportToExcel(data)} className="bg-gray-700 text-white hover:bg-white hover:text-black">
+                    <Button   onClick={() => exportToExcel(data)}  id="no-hover" className="bg-gray-700 text-white">
                       Export XLSX
                     </Button>
                   </Col>

@@ -27,7 +27,7 @@ const CreateShgGroup: React.FC = () => {
   }, []);
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
-    console.log("ol", permissions)
+    
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'create_department' && p.active === 1);
 
     setHasCreatePermission(modifyPermission);

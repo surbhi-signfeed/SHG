@@ -1,17 +1,21 @@
 "use client";
 
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { Form, Input, Button, Checkbox, Select } from "antd";
 import TopNavbar from "@/app/Component/Topnavbar/page";
 import Sidebar from "@/app/Component/Sidebar/page";
 import { useRouter } from "next/navigation";
 import SecureStorage from 'react-secure-storage';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 const { Option } = Select;
 
 const CreateUser: React.FC = () => {
   const [form] = Form.useForm();
-  const router = useRouter();
-  React.useEffect(() => {
+  const router =useRouter();
+  const [hasCreatePermission, setHasCreatePermission] = useState<boolean | null>(null); // Set initial value to null
+  useEffect(() => {
     // Check if the token exists in SecureStorage
     const token = SecureStorage.getItem('accessToken');
     if (!token) {
@@ -20,15 +24,77 @@ const CreateUser: React.FC = () => {
     
     }
   }, []); 
+  useEffect(() => {
+    const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
+    console.log("ol",permissions)
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'user' && p.active === 1);
+  
+    setHasCreatePermission(modifyPermission);
+  
+
+  
+  }, [hasCreatePermission]);
   // Function to handle form submission
-  const onFinish = (values: any) => {
-    console.log("Form Submitted:", values);
+  const onFinish = async (values: any) => {
+    try {
+      // Log form values
+      console.log("Form Values:", values);
+
+      // Convert 'Active' to true and 'Inactive' to false
+      const status = values.status === "Active"; // Converts 'Active' to true, 'Inactive' to false
+
+      // Retrieve the token from SecureStorage
+      const token = SecureStorage.getItem('accessToken');
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      // Prepare the data to be sent
+      const requestData = {
+        department_name: values.department_name,
+        status: status,
+      };
+
+      // Log request data
+      console.log("Request Data:", requestData);
+
+      // Make POST request to API
+      const response = await axios.post('http://localhost:4000/ujs/AddDepartment', requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+
+    
+    // Handle response
+     
+    if (response.data.status === 200) {
+      toast.success('Form submitted successfully!');
+      form.resetFields(); // Optionally reset the form fields
+    } else {
+      // If the response indicates failure, show the error message
+      toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
+    }
+   } 
+   catch (error: any) {
+    console.error("Error submitting form:", error);
+
+    // Check if the error has a response (server error)
+    if (error.response && error.response.data) {
+      toast.error(`Error: ${error.response.data.message || 'Request failed!'}`);
+    } else {
+      // Handle other errors (e.g., network issues)
+      toast.error('An error occurred while submitting the form.');
+    }
+  }
   };
 
   // Function to handle form reset
   const onReset = () => {
     form.resetFields();
   };
+
 
   return (
     <>

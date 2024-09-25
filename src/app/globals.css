@@ -23,3 +23,10 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+#no-hover:hover {
+  background-color: inherit !important; /* Keep the background color unchanged */
+  color: inherit !important;            /* Keep the text color unchanged */
+  cursor: default !important;           /* Keep the default cursor */
+  box-shadow: none !important;          /* Disable any hover shadow */
+}

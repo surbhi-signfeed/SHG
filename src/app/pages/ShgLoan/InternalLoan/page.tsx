@@ -277,7 +277,7 @@ const exportToExcel = (data: any[]) => {
                   </Col>
 
                   <Col>
-                    <Button type="default" onClick={() => exportToExcel(data)} className="bg-gray-700 text-white">
+                    <Button type="default" onClick={() => exportToExcel(data)}  id="no-hover" className="bg-gray-700 text-white">
                       Export XLSX
                     </Button>
                   </Col>

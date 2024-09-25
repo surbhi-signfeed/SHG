@@ -87,7 +87,7 @@ const ListRole: React.FC = () => {
   const [hasViewPermission, setHasViewPermission] = useState<boolean | null>(null); // Set initial value to null
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
-    console.log("ol", permissions)
+    
     const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_role' && p.active === 1);
     const viewPermission = permissions.some((p: any) => p.permission_name === 'view_role' && p.active === 1);
     setHasModifyPermission(modifyPermission);
@@ -281,7 +281,7 @@ const ListRole: React.FC = () => {
                   </Col>
 
                   <Col>
-                    <Button type="default" onClick={() => exportToExcel(data)} className="bg-gray-700 text-white">
+                    <Button type="default" onClick={() => exportToExcel(data)}  id="no-hover" className="bg-gray-700 text-white">
                       Export XLSX
                     </Button>
                   </Col>
