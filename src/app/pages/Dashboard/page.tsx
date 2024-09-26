@@ -15,7 +15,7 @@ const Dashboard = () => {
   const router = useRouter();
   const id = secureLocalStorage.getItem('id')
   const token = secureLocalStorage.getItem('accessToken')
-  console.log('id', id, token)
+  
   const [data, setData] = useState([])
   useEffect(() => {
     // Check if the token exists in SecureStorage

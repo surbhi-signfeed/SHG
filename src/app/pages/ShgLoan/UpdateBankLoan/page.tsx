@@ -128,7 +128,7 @@ const Edit: React.FC = () => {
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
           <div className="container mx-auto p-4">
             <h2 className="text-xl font-semibold mb-4 lg:ml-[20px]">
-              Update Departments
+              Update Bank Loan
             </h2>
 
             <Form

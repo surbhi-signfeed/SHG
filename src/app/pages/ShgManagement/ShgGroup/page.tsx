@@ -80,7 +80,7 @@ const ShgGroup: React.FC = () => {
         });
         const apiData = response.data;
         const formattedData = apiData.shgGroup.map((item: any) => ({
-          key: item.ID,
+          key: item.id,
           group_name: item.group_name,
           group_leader:item.group_leader,
           totalMember:item.totalMember,
@@ -108,7 +108,7 @@ const ShgGroup: React.FC = () => {
     }
   }, [searchText, originalData]); 
   const handleEditClick = (record: SHGData) => {
-    router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
+    router.push(`/pages/ShgManagement/UpdateShgGroup?id=${record.key}`);
   };
   
 

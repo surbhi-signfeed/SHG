@@ -315,7 +315,7 @@ console.log("jn",permissions)
                                     type="primary"
                                     htmlType="submit"
                                     className="bg-gray-900 text-white"
-                                    loading={loading}
+                                    
                                 >
                                     Update
                                 </Button>

@@ -25,6 +25,7 @@ import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
 interface SHGData {
+  key: string;
   loan_no: any;
   bank_name: any;
   meeting_id: any;
@@ -136,7 +137,9 @@ const BankLoan: React.FC = () => {
     const newSize = parseInt(e.key, 10); // Convert key to number
     setPageSize(newSize); // Update page size state
   };
-
+  const handleEditClick = (record: SHGData) => {
+    router.push(`/pages/ShgLoan/UpdateBankLoan?id=${record.key}`);
+  };
   const columns: ColumnsType<SHGData> = [
     {
       title: "Loan No",
@@ -189,24 +192,20 @@ const BankLoan: React.FC = () => {
       key: "interest_rate",
       sorter: (a, b) => a.interest_rate.localeCompare(b.interest_rate),
     },
-    // ...(hasModifyPermission
-    //   ? [
-    //       {
-    //         title: "Action",
-    //         key: "action",
-    //         render: (_: any, record: SHGData) => (
-    //           <Button
-    //             type="primary"
-    //             icon={<EditOutlined />}
-    //             className="bg-gray-700"
-    //             onClick={() => handleEditClick(record)}
-    //           >
-    //             Edit
-    //           </Button>
-    //         ),
-    //       },
-    //     ]
-    //   : []), 
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: SHGData) => (
+        <Button
+          type="primary"
+          icon={<EditOutlined />}
+          className="bg-gray-700"
+          onClick={() => handleEditClick(record)}
+        >
+          Edit
+        </Button>
+      ),
+    },
   
   ];
 

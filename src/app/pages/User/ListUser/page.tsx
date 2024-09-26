@@ -26,6 +26,7 @@ import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
 interface SHGData {
+  mobile: any;
   role: any;
   email: any;
   key: string;
@@ -62,7 +63,7 @@ const ListUser: React.FC = () => {
   useEffect(() => {
     const permissions = JSON.parse(localStorage.getItem('permission') || '[]');
     console.log("ol",permissions)
-    const modifyPermission = permissions.some((p: any) => p.permission_name === 'modify_user' && p.active === 1);
+    const modifyPermission = permissions.some((p: any) => p.permission_name === 'user_modify' && p.active === 1);
     const viewPermission = permissions.some((p: any) => p.permission_name === 'user_view' && p.active === 1);
     setHasModifyPermission(modifyPermission);
     setHasViewPermission(viewPermission);
@@ -77,17 +78,18 @@ const ListUser: React.FC = () => {
     const fetchData = async () => {
       try {
         const token = SecureStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:4000/ujs/ListUser', {
+        const response = await axios.get('http://localhost:4000/ujs/ListOfUserRole', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
         const apiData = response.data;
-        const formattedData = apiData.shgUser.map((item: any) => ({
-          key: item.ID,
+        const formattedData = apiData.user.map((item: any) => ({
+          key: item.Id,
           name: item.name,
           email: item.email,
-          role: item.role,
+          mobile: item.mobile,
+          role: item.role_name,
           Status: item.active,
         }));
         setData(formattedData);
@@ -111,7 +113,7 @@ const ListUser: React.FC = () => {
     }
   }, [searchText, originalData]); 
   const handleEditClick = (record: SHGData) => {
-    router.push(`/pages/Departments/UpdateDepartment?id=${record.key}`);
+    router.push(`/pages/User/UpdateUser?id=${record.key}`);
   };
   
 
@@ -141,10 +143,10 @@ const ListUser: React.FC = () => {
       sorter: (a, b) => a.role.localeCompare(b.role),
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      title: "Phone",
+      dataIndex: "mobile",
+      key: "mobile",
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile),
     },
     {
       title: "Status",
