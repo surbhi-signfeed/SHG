@@ -198,7 +198,7 @@ const UpdateShgMember: React.FC = () => {
         updated_at: values.updated_at, // from DTO
 
       };
-      console.log("k", updateData)
+      
 
       const response = await axios.post('http://localhost:4000/ujs/UpdateShgMember', updateData, {
         headers: {
@@ -210,6 +210,7 @@ const UpdateShgMember: React.FC = () => {
       if (response.data.status === 200) {
         toast.success('Form submitted successfully!');
         form.resetFields(); // Optionally reset the form fields
+        router.push("/pages/ShgManagement/ShgMemberList")
       } else {
         // If the response indicates failure, show the error message
         toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);

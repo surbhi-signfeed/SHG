@@ -18,54 +18,60 @@ const Edit: React.FC = () => {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
 
-  // State to store department data
-  const [department, setDepartment] = useState<any>(null);
+  // State to store internalBankLoan data
+  const [internalBankLoan, setinternalBankLoan] = useState<any>(null);
 
   // Extract ID from URL
-  const departmentId = searchParams.get("id");
-  console.log("i", departmentId)
+  const internalBankLoanId = searchParams.get("id");
+  console.log("i", internalBankLoanId)
   useEffect(() => {
     // Check if the token exists in SecureStorage
     const token = SecureStorage.getItem("accessToken");
     if (!token) {
       router.push("/"); // Redirect to login page if token is not present
     } else {
-      // Fetch department data
-      fetchDepartmentData(departmentId, token);
+      // Fetch internalBankLoan data
+      fetchinternalBankLoanData(internalBankLoanId, token);
     }
-  }, [departmentId]);
+  }, [internalBankLoanId]);
 
-  const fetchDepartmentData = async (id: string | null, token: any) => {
+  const fetchinternalBankLoanData = async (id: string | null, token: any) => {
     if (!id) {
       return;
     }
 
     try {
-      const response = await axios.get("http://localhost:4000/ujs/ListDepartment", {
+      const response = await axios.get("http://localhost:4000/ujs/ListShgInternalLoanSummary", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       const apiData = response.data;
-      const departmentData = apiData.department.find((item: any) => item.ID === parseInt(id));
-      console.log(departmentData.department_name)
+      const internalBankLoanData = apiData.InternalLoanSummary.find((item: any) => item.id === parseInt(id));
+     console.log("lk",internalBankLoanData)
 
-      if (departmentData) {
-        setDepartment(departmentData);
+      if (internalBankLoanData) {
+        setinternalBankLoan(internalBankLoanData);
 
         // Populate form with fetched data
         form.setFieldsValue({
-          DepartmentName: departmentData.department_name,
+          group_name: internalBankLoanData.group_name,
+          shg_id:internalBankLoanData.shg_id,
+          tenure:internalBankLoanData.tenure,
+          loan_amt:internalBankLoanData.loan_amt,
+          interest:internalBankLoanData.interest,
 
-          status: departmentData.status === true ? "Active" : "Inactive",
+
+
+         
         });
       } else {
-        message.error("Department not found");
+        message.error("internalBankLoan not found");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      message.error("Failed to fetch department data");
+      message.error("Failed to fetch internalBankLoan data");
     }
   };
 
@@ -76,13 +82,17 @@ const Edit: React.FC = () => {
       const token = SecureStorage.getItem("accessToken");
 
       const updateData = {
-        ID: departmentId,  // Include the ID in the request body
-        department_name: values.DepartmentName,
-        status: values.status === "Active" ? true : false,  // Assuming status expects a boolean value
+        id: internalBankLoanId,  // Include the ID in the request body
+        group_name: values.group_name,
+        shg_id:values.shg_id,
+        tenure:values.tenure,
+        loan_amt:values.loan_amt,
+        interest:values.interest
+      
       };
       
 
-      const response = await axios.post('http://localhost:4000/ujs/UpdateDepartment', updateData, {
+      const response = await axios.post('http://localhost:4000/ujs/UpdateShgInternalLoan', updateData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
@@ -92,8 +102,8 @@ const Edit: React.FC = () => {
       if (response.data.status === 200) {
         toast.success('Form submitted successfully!');
         form.resetFields(); // Optionally reset the form fields
-        router.push("/pages/Departments/ListDepartments")
-      } else { 
+        router.push("/pages/ShgLoan/InternalLoan")
+      } else {
         // If the response indicates failure, show the error message
         toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);
       }
@@ -129,7 +139,7 @@ const Edit: React.FC = () => {
         <div className="w-full lg:w-3/4 mt-[100px] xl:ml-[-50px] bg-white">
           <div className="container mx-auto p-4">
             <h2 className="text-xl font-semibold mb-4 lg:ml-[20px]">
-              Update Departments
+              Update Internal Bank Loan
             </h2>
 
             <Form
@@ -137,28 +147,52 @@ const Edit: React.FC = () => {
               layout="vertical"
               onFinish={onFinish}
               className="bg-white p-6  rounded-lg"
-              initialValues={department ? {
-                DepartmentName: department.department_name,
-                status: department.status === "Active" ? "Active" : "Inactive",
-              } : {}}
+              // initialValues={internalBankLoan ? {
+              //   internalBankLoanName: internalBankLoan.group_name,
+             
+              // } : {}}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Form.Item
-                  name="DepartmentName"
+                  name="group_name"
                   className="text-gray-600"
-                  label="Department Name"
+                  label="Group Name">
+                  <Input placeholder="Enter Group Name" />
+                </Form.Item>
+
+                <Form.Item
+                  name="shg_id"
+                  className="text-gray-600"
+                  label="SHG ID">
+                  <Input placeholder="Enter ID" />
+                </Form.Item>
+
+                <Form.Item
+                  name="tenure"
+                  className="text-gray-600"
+                  label="Tenure"
 
                 >
 
-                  <Input placeholder="Enter Department Name" />
+                  <Input placeholder="Enter Tenure" />
                 </Form.Item>
+                <Form.Item
+                  name="loan_amt"
+                  className="text-gray-600"
+                  label="Loan Amount"
 
-                <Form.Item name="status" label="Status" >
+                >
 
-                  <Select>
-                    <Option value="Active">Active</Option>
-                    <Option value="Inactive">Inactive</Option>
-                  </Select>
+                  <Input placeholder="" />
+                </Form.Item>
+                <Form.Item
+                  name="interest"
+                  className="text-gray-600"
+                  label="Interest"
+
+                >
+
+                  <Input placeholder="" />
                 </Form.Item>
               </div>
 

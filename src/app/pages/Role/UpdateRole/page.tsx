@@ -110,6 +110,7 @@ console.log("jn",permissions)
             if (response.data.status === 200) {
                 toast.success('Form submitted successfully!');
                 form.resetFields(); // Optionally reset the form fields
+                router.push("/pages/Role/RoleList")
             } else {
                 // If the response indicates failure, show the error message
                 toast.error(`Error: ${response.data.message || 'Something went wrong!'}`);

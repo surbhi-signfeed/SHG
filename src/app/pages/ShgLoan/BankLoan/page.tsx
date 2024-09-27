@@ -162,18 +162,8 @@ const BankLoan: React.FC = () => {
       sorter: (a, b) => a.meeting_id.localeCompare(b.meeting_id),
     },
     
-    {
-      title: "Member Id",
-      dataIndex: "member_id",
-      key: "member_id",
-      sorter: (a, b) => a.member_id.localeCompare(b.member_id),
-    },
-    {
-      title: "Group Id",
-      dataIndex: "group_id",
-      key: "group_id",
-      sorter: (a, b) => a.group_id.localeCompare(b.group_id),
-    },{
+   
+  {
       title: "Loan Amt",
       dataIndex: "loan_amt",
       key: "loan_amt",

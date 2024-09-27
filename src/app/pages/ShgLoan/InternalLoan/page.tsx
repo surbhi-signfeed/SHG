@@ -25,6 +25,7 @@ import { ConfigProvider, theme } from "antd";
 const { Option } = Select;
 
 interface SHGData {
+  key:string
   interest: any;
   shg_id: any;
    tenure: any;
@@ -142,7 +143,9 @@ const InternalLoan: React.FC = () => {
     const newSize = parseInt(e.key, 10); // Convert key to number
     setPageSize(newSize); // Update page size state
   };
-
+  const handleEditClick = (record: SHGData) => {
+    router.push(`/pages/ShgLoan/UpdateInternalLoan?id=${record.key}`);
+  };
   const columns: ColumnsType<SHGData> = [
     {
       title: "Group Id",
@@ -184,7 +187,20 @@ const InternalLoan: React.FC = () => {
     },
     
   
-   
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: SHGData) => (
+        <Button
+          type="primary"
+          icon={<EditOutlined />}
+          className="bg-gray-700"
+          onClick={() => handleEditClick(record)}
+        >
+          Edit
+        </Button>
+      ),
+    },
   
   ];
 
